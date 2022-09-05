@@ -21,7 +21,10 @@ public class RecurringEvent extends Event {
     @Override
     public boolean isOnDay(LocalDate day) {
         // TODO: maybe split days from date interval?
-        return dateInterval.contains(day);
+        if (dateInterval.contains(day)) {
+            return dateInterval.occursOn(day);
+        }
+        return false;
     }
 
     @Override
@@ -29,12 +32,16 @@ public class RecurringEvent extends Event {
         return dateInterval.daysOfTheMonth(month);
     }
 
+    @Override
+    public boolean conflicts(Event event) {
+        return event.isOnDay(dateInterval) && event.getTimeInterval().overlaps(timeInterval);
+    }
+
     public String toString() {
         return String.format("%s%n%s %s %s", this.name, this.dateInterval.daysOfTheWeekToString(), this.timeInterval.toString(), this.dateInterval.datesToString());
     }
 
-//    public LocalDate getDate() {
-//        // TODO: correct this hack to get it to compile for now
-//        return date.start;
-//    }
+    public DateInterval getDateInterval() {
+        return dateInterval;
+    }
 }

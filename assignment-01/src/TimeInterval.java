@@ -7,6 +7,7 @@ public class TimeInterval {
     private LocalTime start;
     private LocalTime end;
 
+    // TODO: uses the default format so we can remove this
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     TimeInterval(LocalTime start, LocalTime end) {
         this.start = start;
@@ -37,5 +38,12 @@ public class TimeInterval {
 
     public LocalTime getEnd() {
         return end;
+    }
+
+    public boolean overlaps(TimeInterval timeInterval) {
+        return (
+                (this.start.compareTo(timeInterval.getStart()) < 0 && 0 < this.end.compareTo(timeInterval.getStart())) ||
+                (this.start.compareTo(timeInterval.getEnd()) < 0 && 0 < this.end.compareTo(timeInterval.getEnd()))
+        );
     }
 }

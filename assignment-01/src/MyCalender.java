@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -32,9 +34,12 @@ public class MyCalender {
 
     public void printMonthView(YearMonth month) {
         ArrayList<Integer> selectedDays =
-                Stream.concat(this.eventsOneTime.stream(), this.eventsRecurring.stream())
-                        .flatMap(event -> event.daysOfTheMonth(month).stream())
-                        .collect(Collectors.toCollection(ArrayList::new));
+                Stream.concat(
+                        this.eventsOneTime.stream(),
+                        this.eventsRecurring.stream()
+                )
+                .flatMap(event -> event.daysOfTheMonth(month).stream())
+                .collect(Collectors.toCollection(ArrayList::new));
         this.printCalendar(month, selectedDays);
     }
 
@@ -91,35 +96,46 @@ public class MyCalender {
 
         while (scanner.hasNext()) {
             event = Event.fromScanner(scanner);
-            if (event == null) {
-                return;
-            }
+
             // Read the newline character
             scanner.nextLine();
+
             if (event.isRecurring()) {
                 addRecurringEvent((RecurringEvent) event);
             } else {
                 addOneTimeEvent((OneTimeEvent) event);
             }
-//            System.out.println(event.toString());
-
         }
-
-//        for (int i = 0; i < this.events.size(); i++) {
-//            System.out.println(events.get(i).toString());
-//        }
-
-
     }
 
-    public void dump(String path) {
+    public void dump(FileWriter fileWriter) {
+        PrintWriter printWriter = new PrintWriter(fileWriter);
 
+        Stream.concat(
+                eventsOneTime.stream(),
+                eventsRecurring.stream()
+        ).forEach(event -> printWriter.println(event));
+
+        printWriter.close();
     }
 
-    public ArrayList<Event> findConflicts(OneTimeEvent event) {
-        // TODO: implement
+    public ArrayList<Event> findConflicts(Event event) {
+        Stream.concat(
+                eventsOneTime.stream(),
+                eventsRecurring.stream()
+        ).filter(e -> e.conflicts(event)).toList();
         return null;
     }
+
+//    public ArrayList<Event> findConflicts(OneTimeEvent event) {
+//        // TODO: implement
+//        return null;
+//    }
+//
+//    public ArrayList<Event> findConflicts(RecurringEvent event) {
+//        // TODO: implement
+//        return null;
+//    }
 
     public boolean addOneTimeEvent(OneTimeEvent event) {
         return eventsOneTime.add(event);
@@ -155,5 +171,13 @@ public class MyCalender {
     public boolean removeReoccurringEvent(Event event) {
         // TODO: split events list
         return eventsRecurring.remove(event);
+    }
+
+    public ArrayList<OneTimeEvent> getEventsOneTime() {
+        return eventsOneTime;
+    }
+
+    public ArrayList<RecurringEvent> getEventsRecurring() {
+        return eventsRecurring;
     }
 }

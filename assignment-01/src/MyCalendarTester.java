@@ -2,7 +2,12 @@ import java.util.Scanner;
 
 public class MyCalendarTester {
     public static void main(String[] args) {
-        CLI cli = new CLI();
-        cli.run();
+        Scanner scanner = new Scanner(System.in);
+
+        CLI cli = new CLI(scanner);
+
+        cli.mainLoop();
+
+        scanner.close();
     }
 }

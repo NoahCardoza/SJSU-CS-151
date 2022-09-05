@@ -14,12 +14,20 @@ public class DateInterval {
         this.daysOfTheWeek = daysOfTheWeek;
     }
 
+    public LocalDate getStart() {
+        return start;
+    }
+
+    public LocalDate getEnd() {
+        return end;
+    }
+
     public ArrayList<Integer> daysOfTheMonth(YearMonth month) {
         ArrayList<Integer> days = new ArrayList<>();
 
         if (contains(month)) {
             LocalDate day = start.getMonth() == month.getMonth() ? start : LocalDate.of(month.getYear(), month.getMonthValue(), 1);
-            int lastDayOfTheMonth = YearMonth.of(month.getYear(), month.getMonth()).lengthOfMonth();
+            int lastDayOfTheMonth = end.getMonth() == month.getMonth() ? end.getDayOfMonth() : YearMonth.of(month.getYear(), month.getMonth()).lengthOfMonth();
 
             while (true) {
                 if ((daysOfTheWeek & (1 << (day.getDayOfWeek().getValue() % 7))) > 0) {
@@ -49,7 +57,7 @@ public class DateInterval {
         return serializedBitmask.toString();
     }
     public String datesToString() {
-        return String.format("%s %s", this.start.format(DateInterval.formatter), this.end.format(DateInterval.formatter));
+        return String.format("%s %s", this.start, this.end);
     }
 
     public boolean contains(YearMonth month) {
@@ -58,5 +66,10 @@ public class DateInterval {
 
     public boolean contains(LocalDate day) {
         return start.compareTo(day) <= 0 && 0 <= end.compareTo(day);
+    }
+
+    public boolean occursOn(LocalDate day) {
+        // TODO: make sure this works LOL
+        return (daysOfTheWeek & (1 << (day.getDayOfWeek().getValue() % 7))) > 0;
     }
 }

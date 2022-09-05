@@ -18,6 +18,22 @@ public class OneTimeEvent extends Event {
     }
 
     @Override
+    public boolean conflicts(Event event) {
+        return event.isOnDay(date) && event.getTimeInterval().overlaps(timeInterval);
+    }
+//    public boolean conflicts(Event event) {
+//        return event.isOnDay(date) && event.getTimeInterval().overlaps(timeInterval);
+//        if (event.isRecurring()) {
+//            if () {
+//
+//            }
+//            event.get
+//        } else {
+//
+//        }
+//    }
+
+    @Override
     public boolean isOnDay(LocalDate day) {
         return this.date.equals(day);
     }
@@ -42,8 +58,7 @@ public class OneTimeEvent extends Event {
 //        return 0;
 //    }
 
-//    public LocalDate getDate() {
-//        // TODO: correct this hack to get it to compile for now
-//        return date.start;
-//    }
+    public LocalDate getDate() {
+        return date;
+    }
 }

@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="22a4000f-97ab-4f11-b40e-18a92277577e" name="Changes" comment="" />
+    <list default="true" id="22a4000f-97ab-4f11-b40e-18a92277577e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assignment-01.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/events.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/CLI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/DateInterval.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Event.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MyCalendarTester.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MyCalender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OneTimeEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Prompt.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RecurringEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TimeInterval.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,7 +52,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
+    "settings.editor.selected.configurable": "preferences.editor"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -40,7 +60,14 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.MyCalendarTester">
+    <configuration name="Card" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Card" />
+      <module name="assignment-01" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MyCalendarTester" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MyCalendarTester" />
       <module name="assignment-01" />
@@ -51,6 +78,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.MyCalendarTester" />
+        <item itemvalue="Application.Card" />
       </list>
     </recent_temporary>
   </component>
@@ -86,7 +114,7 @@
       <breakpoints>
         <line-breakpoint type="java-method">
           <url>file://$PROJECT_DIR$/src/RecurringEvent.java</url>
-          <line>31</line>
+          <line>39</line>
           <properties class="RecurringEvent" method="toString">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -95,7 +123,7 @@
         </line-breakpoint>
         <line-breakpoint type="java-method">
           <url>file://$PROJECT_DIR$/src/MyCalender.java</url>
-          <line>26</line>
+          <line>28</line>
           <properties class="MyCalender" method="printEventCalendar">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -104,8 +132,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/DateInterval.java</url>
-          <line>16</line>
-          <properties class="DateInterval" method="daysOfTheMonth">
+          <line>18</line>
+          <properties class="DateInterval">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -113,13 +141,18 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/RecurringEvent.java</url>
-          <line>28</line>
+          <line>31</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/OneTimeEvent.java</url>
-          <line>21</line>
+          <line>37</line>
           <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/DateInterval.java</url>
+          <line>67</line>
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
         <breakpoint type="java-exception">
           <properties class="java.lang.ClassCastException" package="java.lang" />
@@ -134,5 +167,9 @@
         <watch expression="(daysOfTheWeek &amp; (1 &lt;&lt; (day.getDayOfWeek().getValue() % 7))) &gt; 0" language="JAVA" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

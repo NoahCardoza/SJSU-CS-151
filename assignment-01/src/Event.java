@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 abstract public class Event implements Comparable<Event> {
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     String name;
     TimeInterval timeInterval;
@@ -62,4 +62,6 @@ abstract public class Event implements Comparable<Event> {
     }
 
     public abstract boolean isOnDay(LocalDate date);
+
+    public abstract boolean conflicts(Event event);
 }

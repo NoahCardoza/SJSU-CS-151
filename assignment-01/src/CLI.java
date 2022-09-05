@@ -1,65 +1,93 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.*;
+import java.time.format.TextStyle;
+import java.util.*;
 
 public class CLI {
     private MyCalender calender;
     private Scanner scanner;
     private Prompt prompt;
 
-    void run() {
-        char choice;
-
-        scanner = new Scanner(System.in);
+    CLI(Scanner scanner) {
+        this.scanner = scanner;
         prompt = new Prompt(scanner);
         calender = new MyCalender();
-        calender.printTodayCalendar();
+    }
 
-        File file = new File("events.txt");
+    private boolean loadFromFile() {
+        File iFile = new File("events.txt");
 
         try {
-            calender.load(file);
+            calender.load(iFile);
         } catch (FileNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean dumpToFile() {
+        FileWriter oFile;
+
+        try {
+            oFile = new FileWriter("output.txt");
+            calender.dump(oFile);
+            oFile.close();
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+    public void mainLoop() {
+        calender.printTodayCalendar();
+
+        if (loadFromFile()) {
+            System.out.println("Success: Events loaded from events.txt!");
+        } else {
             System.out.println("Error: events.txt could not be found.");
             return;
         }
 
-        System.out.println("Loading is done!");
-
         calender.printEventCalendar();
+
+        screenMainMenuLoop();
+
+        if (dumpToFile()) {
+            System.out.println("Success: Events saved to output.txt!");
+        } else {
+            System.out.println("Error: output.txt could not be written to.");
+        }
+    }
+
+    private void screenMainMenuLoop() {
+        char choice;
 
         do {
             System.out.println("Select one of the following main menu options:");
-            choice = prompt.choice("[V]iew by  [C]reate, [G]o to [E]vent list [D]elete  [Q]uit",
+            choice = prompt.choice(
+                    "[V]iew by  [C]reate, [G]o to [E]vent list [D]elete  [Q]uit",
                     "VCGEDQ"
             );
 
-            if (choice == 'V') {
-                screenViewBy();
-            } else if (choice == 'C') {
-                screenCreate();
-            } else if (choice == 'G') {
-                screenGoTo();
-            } else if (choice == 'E') {
-                screenEventList();
-            } else if (choice == 'D') {
-                screenDelete();
-            }
+            if (choice == 'V') { screenViewBy(); }
+            else if (choice == 'C') { screenCreate(); }
+            else if (choice == 'G') { screenGoTo(); }
+            else if (choice == 'E') { screenEventList(); }
+            else if (choice == 'D') { screenDelete(); }
         } while (choice != 'Q');
-
-        scanner.close();
     }
 
 
     private void screenViewBy() {
         char choice;
 
-        choice = prompt.choice("[D]ay view or [M]view", "DM");
+        choice = prompt.choice("[D]ay view or [M]onth iew", "DM");
 
         if (choice == 'D') {
             LocalDate day = LocalDate.now();
@@ -94,10 +122,21 @@ public class CLI {
         // TODO: ask about changing the format to make it work without casting
         // and duplicating this code below from Event::fromStream
 
-        String name = scanner.nextLine();
-        LocalDate date = LocalDate.parse(scanner.next(), RecurringEvent.formatter);
-        TimeInterval time = TimeInterval.fromScanner(scanner);
-        OneTimeEvent event = new OneTimeEvent(name, date, time);
+        char choice = prompt.choice("[O]ne-time  [R]ecurring", "OR");
+
+        if (choice == 'R') {
+            System.out.println("Error: Not implemented yet.");
+            return;
+        }
+
+        String name = prompt.line("Name");
+        LocalDate date = prompt.date("Date");
+
+        LocalTime startTime = prompt.time("Start");
+        LocalTime endTime = prompt.time("End");
+        TimeInterval timeInterval = new TimeInterval(startTime, endTime);
+
+        OneTimeEvent event = new OneTimeEvent(name, date, timeInterval);
 
         ArrayList<Event> conflicts = calender.findConflicts(event);
 
@@ -113,20 +152,64 @@ public class CLI {
     }
 
     private void screenEventList() {
-//        ONE TIME EVENTS
-//
-//        2021
-//        Friday March 15 13:15 - 14:00 Dentist
-//        Thursday April 25 15:00 - 16:00 Job Interview
-//        2022
-//  ...
-//
-//        RECURRING EVENTS
+        List<OneTimeEvent> oneTimeEvents = calender.getEventsOneTime().stream().sorted((a, b) -> {
+            int cmp = a.getDate().compareTo(b.getDate());
+            if (cmp == 0) {
+                return a.getTimeInterval().compareTo(b.getTimeInterval());
+            }
+            return cmp;
+        }).toList();
+
+        String yearFormat  = "| %s%n";
+        String monthFormat = "@--| %s%n";
+        String dayFormat   = "#----| %02d%n";
+        String eventFormat = "+--------| [%s - %s] %s%n";
+
+        int currentYear = oneTimeEvents.get(0).getDate().getYear();
+        Month currentMonth = oneTimeEvents.get(0).getDate().getMonth();
+        int currentDay = oneTimeEvents.get(0).getDate().getDayOfMonth();
+
+        System.out.println("ONE-TIME EVENTS:");
+        System.out.println();
+        System.out.printf(yearFormat, currentYear);
+        System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+        System.out.printf(dayFormat, currentDay);
+
+        for (OneTimeEvent event : oneTimeEvents) {
+            if (currentYear != event.getDate().getYear()) {
+                currentYear = event.getDate().getYear();
+                currentMonth = event.getDate().getMonth();
+                currentDay = event.getDate().getDayOfMonth();
+                System.out.printf(yearFormat, currentYear);
+                System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+                System.out.printf(dayFormat, currentDay);
+            } else if (!currentMonth.equals(event.getDate().getMonth())) {
+                currentMonth = event.getDate().getMonth();
+                currentDay = event.getDate().getDayOfMonth();
+                System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+                System.out.printf(dayFormat, currentDay);
+            } else if (currentDay != event.getDate().getDayOfMonth()) {
+                currentDay = event.getDate().getDayOfMonth();
+                System.out.printf(dayFormat, currentDay);
+            }
+
+            System.out.printf(eventFormat, event.getTimeInterval().getStart(), event.getTimeInterval().getEnd(), event.getName());
+        }
+
+        System.out.println();
+        System.out.println("RECURRING EVENTS:");
+        System.out.println();
+
+        calender
+            .getEventsRecurring()
+            .stream()
+            .sorted(Comparator.comparing(a -> a.getDateInterval().getStart()))
+                .forEachOrdered(System.out::println);
+
 //        CS157C Lecture
 //        MW 10:30 11:45 8/22/22 12/6/22
 //        CS151 Lecture
 //        TR 9:00 10:15 8/22/22 12/6/22
-
     }
 
     private void screenDelete() {

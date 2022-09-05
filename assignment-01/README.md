@@ -48,6 +48,7 @@ In the events.txt file, each event takes up two lines.
 
 Here is a sample events.txt:
 
+```
 CS151 Lecture
 TR 10:30 11:45 8/23/22 12/6/22
 CS157C Lecture
@@ -58,41 +59,48 @@ Dentist appt
 10/3/22 16:15 17:00
 Course Committee Meeting
 F 18:30 20:30  9/20/22 12/9/22 
+```
 
 After loading the events, the program prompts "Loading is done!".  
 The program now displays a **MAIN MENU** with following options: View by, Create, Go to, Event list, Delete, and Quit. After the function of an option is done, the main menu is displayed again for the user to choose the next option.
 
+```
 Select one of the following main menu options:
-\[V\]iew by  \[C\]reate, \[G\]o to \[E\]vent list \[D\]elete  \[Q\]uit
+[V]iew by  [C]reate, [G]o to [E]vent list [D]elete  [Q]uit
+```
 
 The user may enter one of the letters highlighted with a pair of the bracket to choose an option. For example,
 
+```
 V
+```
 
 will choose the View by option.*   \[V\]iew by  
-    The user can choose a Day or a Month view. If a Day view is chosen, the program prints today's date. If there is an event(s) scheduled on that day, display them **in the order of start time** of the event. With a Month view, it displays the **current** month and **highlights** day(s) with a pair of brackets {} if any event scheduled on that day. After the selected view is displayed, the calendar gives the user three options: P, N, and G, where P, N, and M stand for Previous, Next and Go back to the main menu, respectively. The previous and next options allow the user to navigate **the current view** back and forth. If the day view was selected, the view goes back (P) and forth (N) by day. If the month view was chosen, the view goes back (P) and forth (N) by month. Here are sample runs:
+The user can choose a Day or a Month view. If a Day view is chosen, the program prints today's date. If there is an event(s) scheduled on that day, display them **in the order of start time** of the event. With a Month view, it displays the **current** month and **highlights** day(s) with a pair of brackets {} if any event scheduled on that day. After the selected view is displayed, the calendar gives the user three options: P, N, and G, where P, N, and M stand for Previous, Next and Go back to the main menu, respectively. The previous and next options allow the user to navigate **the current view** back and forth. If the day view was selected, the view goes back (P) and forth (N) by day. If the month view was chosen, the view goes back (P) and forth (N) by month. Here are sample runs:
     
-    \[D\]ay view or \[M\]view ? 
-    
-    If the user selects D, then today's date is displayed along with scheduled events.
-    
-    Thu, August 25, 2022 
-    CS151 Lecture : 10:30 - 11:45 
-    
-    \[P\]revious or \[N\]ext or \[G\]o back to the main menu ?  <-- The option menu allows the user to choose navigating the Day view or going back to the main menu
-    
-    If the user selects M, then
-    
-     August 2022      
-    Su Mo Tu We Th Fr Sa  
-        1  2  3  4  5  6  
-     7  8  9 10 11 12 13  
-    14 15 16 17 18 19 20  
-    21 22 23 24 {25} 26 27  
-    28  
-    
-    \[P\]revious or \[N\]ext or \[G\]o back to main menu ? 
-    
+```
+[D]ay view or [M]view ? 
+
+If the user selects D, then today's date is displayed along with scheduled events.
+
+Thu, August 25, 2022 
+CS151 Lecture : 10:30 - 11:45 
+
+[P]revious or [N]ext or [G]o back to the main menu ?  <-- The option menu allows the user to choose navigating the Day view or going back to the main menu
+
+If the user selects M, then
+
+    August 2022      
+Su Mo Tu We Th Fr Sa  
+    1  2  3  4  5  6  
+    7  8  9 10 11 12 13  
+14 15 16 17 18 19 20  
+21 22 23 24 {25} 26 27  
+28  
+
+[P]revious or [N]ext or [G]o back to main menu ? 
+```
+
     Help: The following example code segment shows how to print the given date in a specified format.
     
     LocalDate c = ....
