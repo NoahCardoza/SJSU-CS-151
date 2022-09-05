@@ -6,22 +6,23 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MyCalender {
-    private ArrayList<OneTimeEvent> eventsOneTime;
-    private ArrayList<RecurringEvent> eventsRecurring;
+    private final ArrayList<Event> eventsOneTime;
+    private final ArrayList<Event> eventsRecurring;
 
     MyCalender() {
-        this.eventsOneTime = new ArrayList<OneTimeEvent>();
-        this.eventsRecurring = new ArrayList<RecurringEvent>();
+        this.eventsOneTime = new ArrayList<>();
+        this.eventsRecurring = new ArrayList<>();
     }
 
     public void printTodayCalendar() {
         LocalDate now = LocalDate.now();
-        ArrayList<Integer> selectedDays = new ArrayList<Integer>();
+        ArrayList<Integer> selectedDays = new ArrayList<>();
         selectedDays.add(now.getDayOfMonth());
         this.printCalendar(selectedDays);
     }
@@ -101,9 +102,9 @@ public class MyCalender {
             scanner.nextLine();
 
             if (event.isRecurring()) {
-                addRecurringEvent((RecurringEvent) event);
+                addRecurringEvent(event);
             } else {
-                addOneTimeEvent((OneTimeEvent) event);
+                addOneTimeEvent(event);
             }
         }
     }
@@ -114,39 +115,27 @@ public class MyCalender {
         Stream.concat(
                 eventsOneTime.stream(),
                 eventsRecurring.stream()
-        ).forEach(event -> printWriter.println(event));
+        ).forEach(printWriter::println);
 
         printWriter.close();
     }
 
-    public ArrayList<Event> findConflicts(Event event) {
-        Stream.concat(
-                eventsOneTime.stream(),
-                eventsRecurring.stream()
-        ).filter(e -> e.conflicts(event)).toList();
-        return null;
+    public List<Event> findConflicts(Event event) {
+        return Stream.concat(eventsOneTime.stream(), eventsRecurring.stream())
+                .filter(e -> e.conflicts(event))
+                .toList();
     }
 
-//    public ArrayList<Event> findConflicts(OneTimeEvent event) {
-//        // TODO: implement
-//        return null;
-//    }
-//
-//    public ArrayList<Event> findConflicts(RecurringEvent event) {
-//        // TODO: implement
-//        return null;
-//    }
-
-    public boolean addOneTimeEvent(OneTimeEvent event) {
+    public boolean addOneTimeEvent(Event event) {
         return eventsOneTime.add(event);
     }
-    public boolean addRecurringEvent(RecurringEvent event) {
+    public boolean addRecurringEvent(Event event) {
         return eventsRecurring.add(event);
     }
     public ArrayList<Event> getOneTimeEventsOnDate(LocalDate date) {
         return eventsOneTime.stream()
                 .filter(event -> event.isOnDay(date))
-                .sorted()
+                .sorted(Event::compareByStartTime)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
     public ArrayList<Event> getEventsOnDate(LocalDate date) {
@@ -154,7 +143,7 @@ public class MyCalender {
                         eventsOneTime.stream(),
                         eventsRecurring.stream()
                 ).filter(event -> event.isOnDay(date))
-                .sorted()
+                .sorted(Event::compareByStartTime)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -164,7 +153,7 @@ public class MyCalender {
     }
 
     // TODO: implement fuzzy search
-    public RecurringEvent findRecurringEventByName(String name) {
+    public Event findRecurringEventByName(String name) {
         return eventsRecurring.stream().filter(event -> event.getName().equals(name)).findAny().orElse(null);
     }
 
@@ -173,11 +162,11 @@ public class MyCalender {
         return eventsRecurring.remove(event);
     }
 
-    public ArrayList<OneTimeEvent> getEventsOneTime() {
+    public ArrayList<Event> getEventsOneTime() {
         return eventsOneTime;
     }
 
-    public ArrayList<RecurringEvent> getEventsRecurring() {
+    public ArrayList<Event> getEventsRecurring() {
         return eventsRecurring;
     }
 }

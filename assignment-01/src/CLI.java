@@ -7,9 +7,9 @@ import java.time.format.TextStyle;
 import java.util.*;
 
 public class CLI {
-    private MyCalender calender;
-    private Scanner scanner;
-    private Prompt prompt;
+    private final MyCalender calender;
+    private final Scanner scanner;
+    private final Prompt prompt;
 
     CLI(Scanner scanner) {
         this.scanner = scanner;
@@ -75,11 +75,13 @@ public class CLI {
                     "VCGEDQ"
             );
 
-            if (choice == 'V') { screenViewBy(); }
-            else if (choice == 'C') { screenCreate(); }
-            else if (choice == 'G') { screenGoTo(); }
-            else if (choice == 'E') { screenEventList(); }
-            else if (choice == 'D') { screenDelete(); }
+            switch (choice) {
+                case 'V' -> screenViewBy();
+                case 'C' -> screenCreate();
+                case 'G' -> screenGoTo();
+                case 'E' -> screenEventList();
+                case 'D' -> screenDelete();
+            }
         } while (choice != 'Q');
     }
 
@@ -88,39 +90,41 @@ public class CLI {
         char choice;
 
         choice = prompt.choice("[D]ay view or [M]onth iew", "DM");
+        switch (choice) {
+            case 'D' -> screenViewByDay();
+            case 'M' -> screenViewByMonth();
+        }
+    }
+    private void screenViewByDay() {
+        char choice = 0;
 
-        if (choice == 'D') {
-            LocalDate day = LocalDate.now();
-            while (choice != 'G') {
-                calender.printDayView(day);
-                choice = prompt.choice("[P]revious or [N]ext or [G]o back to the main menu?", "PNG");
-                if (choice == 'P') {
-                    day = day.minusDays(1);
-                } else if (choice == 'N') {
-                    day = day.plusDays(1);
-                }
-            }
-        } else {
-            YearMonth month = YearMonth.now();
-            while (choice != 'G') {
-                calender.printMonthView(month);
-                choice = prompt.choice("[P]revious or [N]ext or [G]o back to the main menu?", "PNG");
-                if (choice == 'P') {
-                    month = month.minusMonths(1);
-                } else if (choice == 'N') {
-                    month = month.plusMonths(1);
-                }
+        LocalDate day = LocalDate.now();
+        while (choice != 'G') {
+            calender.printDayView(day);
+            choice = prompt.choice("[P]revious or [N]ext or [G]o back to the main menu?", "PNG");
+            if (choice == 'P') {
+                day = day.minusDays(1);
+            } else if (choice == 'N') {
+                day = day.plusDays(1);
             }
         }
-
     }
+    private void screenViewByMonth() {
+        char choice = 0;
 
+        YearMonth month = YearMonth.now();
+        while (choice != 'G') {
+            calender.printMonthView(month);
+            choice = prompt.choice("[P]revious or [N]ext or [G]o back to the main menu?", "PNG");
+            if (choice == 'P') {
+                month = month.minusMonths(1);
+            } else if (choice == 'N') {
+                month = month.plusMonths(1);
+            }
+        }
+    }
     private void screenCreate() {
         System.out.println("Enter the details for a one-time event below:");
-
-        // OneTimeEvent event = (OneTimeEvent) Event.fromScanner(scanner, true);
-        // TODO: ask about changing the format to make it work without casting
-        // and duplicating this code below from Event::fromStream
 
         char choice = prompt.choice("[O]ne-time  [R]ecurring", "OR");
 
@@ -136,38 +140,45 @@ public class CLI {
         LocalTime endTime = prompt.time("End");
         TimeInterval timeInterval = new TimeInterval(startTime, endTime);
 
-        OneTimeEvent event = new OneTimeEvent(name, date, timeInterval);
+        Event event = new Event(name, date, timeInterval);
 
-        ArrayList<Event> conflicts = calender.findConflicts(event);
+        List<Event> conflicts = calender.findConflicts(event);
 
         if (conflicts.size() >= 1) {
-            // TODO: list conflicting events
+            System.out.println("Error: Cannot event as it conflicts with the following events:");
+            for (Event e : conflicts) {
+                System.out.printf(
+                        "  [%s - %s] %s%n",
+                        e.getTimeInterval().getStart(),
+                        e.getTimeInterval().getEnd(),
+                        e.getName()
+                );
+            }
+        } else {
+            calender.addOneTimeEvent(event);
         }
-
-        calender.addOneTimeEvent(event);
     }
 
     private void screenGoTo() {
-        calender.printDayView(prompt.date("Enter a date to go to"));
+        LocalDate day = prompt.date("Enter a date to go to");
+        calender.printDayView(day);
     }
 
     private void screenEventList() {
-        List<OneTimeEvent> oneTimeEvents = calender.getEventsOneTime().stream().sorted((a, b) -> {
-            int cmp = a.getDate().compareTo(b.getDate());
-            if (cmp == 0) {
-                return a.getTimeInterval().compareTo(b.getTimeInterval());
-            }
-            return cmp;
-        }).toList();
+        List<Event> oneTimeEvents =
+                calender.getEventsOneTime()
+                        .stream()
+                        .sorted(Event::compareByStartDateAndStartTime)
+                        .toList();
 
         String yearFormat  = "| %s%n";
         String monthFormat = "@--| %s%n";
         String dayFormat   = "#----| %02d%n";
         String eventFormat = "+--------| [%s - %s] %s%n";
 
-        int currentYear = oneTimeEvents.get(0).getDate().getYear();
-        Month currentMonth = oneTimeEvents.get(0).getDate().getMonth();
-        int currentDay = oneTimeEvents.get(0).getDate().getDayOfMonth();
+        int currentYear = oneTimeEvents.get(0).getStartDate().getYear();
+        Month currentMonth = oneTimeEvents.get(0).getStartDate().getMonth();
+        int currentDay = oneTimeEvents.get(0).getStartDate().getDayOfMonth();
 
         System.out.println("ONE-TIME EVENTS:");
         System.out.println();
@@ -175,21 +186,21 @@ public class CLI {
         System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
         System.out.printf(dayFormat, currentDay);
 
-        for (OneTimeEvent event : oneTimeEvents) {
-            if (currentYear != event.getDate().getYear()) {
-                currentYear = event.getDate().getYear();
-                currentMonth = event.getDate().getMonth();
-                currentDay = event.getDate().getDayOfMonth();
+        for (Event event : oneTimeEvents) {
+            if (currentYear != event.getStartDate().getYear()) {
+                currentYear = event.getStartDate().getYear();
+                currentMonth = event.getStartDate().getMonth();
+                currentDay = event.getStartDate().getDayOfMonth();
                 System.out.printf(yearFormat, currentYear);
                 System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
                 System.out.printf(dayFormat, currentDay);
-            } else if (!currentMonth.equals(event.getDate().getMonth())) {
-                currentMonth = event.getDate().getMonth();
-                currentDay = event.getDate().getDayOfMonth();
+            } else if (!currentMonth.equals(event.getStartDate().getMonth())) {
+                currentMonth = event.getStartDate().getMonth();
+                currentDay = event.getStartDate().getDayOfMonth();
                 System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
                 System.out.printf(dayFormat, currentDay);
-            } else if (currentDay != event.getDate().getDayOfMonth()) {
-                currentDay = event.getDate().getDayOfMonth();
+            } else if (currentDay != event.getStartDate().getDayOfMonth()) {
+                currentDay = event.getStartDate().getDayOfMonth();
                 System.out.printf(dayFormat, currentDay);
             }
 
@@ -203,54 +214,48 @@ public class CLI {
         calender
             .getEventsRecurring()
             .stream()
-            .sorted(Comparator.comparing(a -> a.getDateInterval().getStart()))
-                .forEachOrdered(System.out::println);
-
-//        CS157C Lecture
-//        MW 10:30 11:45 8/22/22 12/6/22
-//        CS151 Lecture
-//        TR 9:00 10:15 8/22/22 12/6/22
+            .sorted(
+                    Comparator.comparing(a -> a.getDateInterval().getStart())
+            ).forEachOrdered(System.out::println);
     }
 
     private void screenDelete() {
-        LocalDate date;
-        ArrayList<Event> events;
-
         char choice = prompt.choice("[S]elect   [A]ll on date   [R]ecurring event", "SAR");
         switch (choice) {
-            case 'S':
-                date = prompt.date("Enter a date to list the events on that day");
-                events = calender.getOneTimeEventsOnDate(date);
-
-                if (events.isEmpty()) {
-                    System.out.println("There are one-time events scheduled that day.");
-                    return;
-                }
-
-                calender.printDayView(date, events);
-                int eventIndex = prompt.range("Choose an even to delete", 1, events.size()) - 1;
-                calender.removeOneTimeEvent(events.get(eventIndex));
-
-                System.out.println("Success: The event was removed!");
-                return;
-            case 'A':
-                date = prompt.date("Enter a date to clear the events from");
-                events = calender.getOneTimeEventsOnDate(date);
-                for (int i = 0; i < events.size(); i++) {
-                    calender.removeOneTimeEvent(events.get(i));
-                }
-                System.out.printf("Success: All the one-time events on %1$tm/%1$td/%1$tY removed!%n", date);
-                return;
-            case 'R':
-                screenDeleteRecurringEvent();
+            case 'S' -> screenDeleteInteractive();
+            case 'A' -> screenDeleteAllOnDay();
+            case 'R' -> screenDeleteRecurringEvent();
         }
+    }
+
+    private void screenDeleteInteractive() {
+        LocalDate date = prompt.date("Enter a date to list the events on that day");
+        ArrayList<Event> events = calender.getOneTimeEventsOnDate(date);
+
+        if (events.isEmpty()) {
+            System.out.println("There are one-time events scheduled that day.");
+            return;
+        }
+
+        calender.printDayView(date, events);
+        int eventIndex = prompt.range("Choose an even to delete", 1, events.size()) - 1;
+        calender.removeOneTimeEvent(events.get(eventIndex));
+        System.out.println("Success: The event was removed!");
+    }
+    private void screenDeleteAllOnDay() {
+        LocalDate date = prompt.date("Enter a date to clear the events from");
+        ArrayList<Event> events = calender.getOneTimeEventsOnDate(date);
+        for (Event event : events) {
+            calender.removeOneTimeEvent(event);
+        }
+        System.out.printf("Success: All the one-time events on %1$tm/%1$td/%1$tY removed!%n", date);
     }
 
     private void screenDeleteRecurringEvent() {
         System.out.print("Event name: ");
         String name = scanner.nextLine();
 
-        RecurringEvent event = calender.findRecurringEventByName(name);
+        Event event = calender.findRecurringEventByName(name);
 
         if (event != null) {
             calender.removeReoccurringEvent(event);

@@ -3,10 +3,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Prompt {
-    private Scanner scanner;
+    private final Scanner scanner;
 
     Prompt (Scanner scanner) {
         this.scanner = scanner;
@@ -36,13 +37,19 @@ public class Prompt {
         int input;
 
         System.out.printf("%s [%d - %d]: ", prompt, start, end);
-        input = scanner.nextInt();
+        try {
+            input = scanner.nextInt();
 
-        // flush the newline from the buffer
-        scanner.nextLine();
+            // flush the newline from the buffer
+            scanner.nextLine();
 
-        if (start <= input && input <= end) {
-            return input;
+            if (start <= input && input <= end) {
+                return input;
+            }
+
+            System.out.printf("Error: Invalid selection. Must be between %d and %d.%n", start, end);
+        } catch (InputMismatchException e) {
+            System.out.printf("Error: Invalid input. Must be an integer.%n", start, end);
         }
 
         System.out.printf("Error: Invalid selection. Must be an integer between %d and %d.%n", start, end);
