@@ -21,6 +21,10 @@ public class CLI {
     private final Scanner scanner;
     private final Prompt prompt;
 
+    /**
+     * Constructs a new CLI instance.
+     * @param scanner the scanner to read user input from.
+     */
     CLI(Scanner scanner) {
         this.scanner = scanner;
         prompt = new Prompt(scanner);
@@ -60,7 +64,11 @@ public class CLI {
         return true;
     }
 
-
+    /**
+     * Executes the main CLI loop. Handles loading the events.txt
+     * and serializing the data to output.txt after the program is
+     * quit.
+     */
     public void mainLoop() {
         calender.printTodayCalendar();
 
@@ -171,13 +179,13 @@ public class CLI {
             for (Event e : conflicts) {
                 System.out.printf(
                         "  [%s - %s] %s%n",
-                        e.getTimeInterval().getStart(),
-                        e.getTimeInterval().getEnd(),
+                        e.getStartTime(),
+                        e.getEndTime(),
                         e.getName()
                 );
             }
         } else {
-            calender.addOneTimeEvent(event);
+            calender.addEvent(event);
             System.out.println("Success: The new event has been added to the calendar.");
         }
     }
@@ -191,7 +199,11 @@ public class CLI {
         List<Event> oneTimeEvents =
                 calender.getEventsOneTime()
                         .stream()
-                        .sorted(Event::compareByStartDateAndStartTime)
+                        .sorted(
+                                Comparator.comparing(Event::getStartDate)
+                                .thenComparing(Event::getStartTime)
+                        )
+
                         .toList();
 
         String yearFormat  = "┃ ▣ %s%n";
@@ -203,6 +215,7 @@ public class CLI {
         Month currentMonth = oneTimeEvents.get(0).getStartDate().getMonth();
         int currentDay = oneTimeEvents.get(0).getStartDate().getDayOfMonth();
 
+        // TODO: should this be contained by the MyCalendar
         System.out.println("┏ ONE-TIME EVENTS ▷");
         System.out.printf(yearFormat, currentYear);
         System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
@@ -226,23 +239,24 @@ public class CLI {
                 System.out.printf(dayFormat, currentDay);
             }
 
-            System.out.printf(eventFormat, event.getTimeInterval().getStart(), event.getTimeInterval().getEnd(), event.getName());
+            System.out.printf(eventFormat, event.getStartTime(), event.getEndTime(), event.getName());
         }
         System.out.println("┗");
 
         System.out.println();
 
+        // TODO: should this be contained by the MyCalendar
         System.out.println("┏ RECURRING EVENTS ▷");
         calender
             .getEventsRecurring()
             .stream()
             .sorted(
-                    Comparator.comparing(a -> a.getDateInterval().getStart())
+                    Comparator.comparing(Event::getStartDate)
             ).forEachOrdered(event -> {
                 System.out.printf(
                         "┣ %s%n┃ [%s]  (%s - %s)%n┃ %s  --  %s%n",
                         event.getName(),
-                        Event.repeatedDaysToStringPadded(event.getRepeatedDays()),
+                        event.repeatedDaysToStringPadded(),
                         event.getStartTime(),
                         event.getEndTime(),
                         event.getStartDate(),
@@ -272,7 +286,7 @@ public class CLI {
 
         calender.printDayView(date, events);
         int eventIndex = prompt.range("Choose an even to delete", 1, events.size()) - 1;
-        calender.removeOneTimeEvent(events.get(eventIndex));
+        calender.removeEvent(events.get(eventIndex));
         System.out.println("Success: The event was removed!");
     }
 
@@ -280,7 +294,7 @@ public class CLI {
         LocalDate date = prompt.date("Enter a date to clear the events from");
         ArrayList<Event> events = calender.getOneTimeEventsOnDate(date);
         for (Event event : events) {
-            calender.removeOneTimeEvent(event);
+            calender.removeEvent(event);
         }
         System.out.printf("Success: All the one-time events on %1$tm/%1$td/%1$tY removed!%n", date);
     }
@@ -292,7 +306,7 @@ public class CLI {
         Event event = calender.findRecurringEventByName(name);
 
         if (event != null) {
-            calender.removeReoccurringEvent(event);
+            calender.removeEvent(event);
             System.out.println("Success: The recurring event was removed.");
         } else {
             System.out.println("Error: Could not find a recurring event matching that name. Please try again.");

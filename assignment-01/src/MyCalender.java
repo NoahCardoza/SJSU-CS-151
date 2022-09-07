@@ -13,20 +13,31 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Encapsulates a collection of events and handles CLI representations of
+ * the calendar.
+ */
 public class MyCalender {
     private final ArrayList<Event> eventsOneTime;
     private final ArrayList<Event> eventsRecurring;
 
+    /**
+     * Constructs a calendar instance.
+     */
     MyCalender() {
         this.eventsOneTime = new ArrayList<>();
         this.eventsRecurring = new ArrayList<>();
     }
 
+    /**
+     * Prints the calendar with the current day selected.
+     */
     public void printTodayCalendar() {
         LocalDate now = LocalDate.now();
         ArrayList<Integer> selectedDays = new ArrayList<>();
@@ -34,17 +45,28 @@ public class MyCalender {
         this.printCalendar(selectedDays);
     }
 
+    /**
+     * Prints the calendar view of the specific month. Days on which
+     * events occur are highlighted.
+     *
+     * @param month the month to display
+     */
     public void printMonthView(YearMonth month) {
         ArrayList<Integer> selectedDays =
                 Stream.concat(
                         this.eventsOneTime.stream(),
                         this.eventsRecurring.stream()
                 )
+                 // TODO: maybe pass a set to daysOfTheMonth so we don't
+                 //       duplicate the days for multiple events?
                 .flatMap(event -> event.daysOfTheMonth(month).stream())
                 .collect(Collectors.toCollection(ArrayList::new));
         this.printCalendar(month, selectedDays);
     }
 
+    /**
+     * Print the month view for the current month.
+     */
     public void printMonthView() {
         printMonthView(YearMonth.now());
     }
@@ -73,14 +95,24 @@ public class MyCalender {
         System.out.println();
     }
 
+    /**
+     * Display all events in the day view format on a specific date.
+     *
+     * @param date the date to use when searching for all events
+     */
     public void printDayView(LocalDate date) {
-        ArrayList<Event> events = getEventsOnDate(date);
+        ArrayList<Event> events = getAllEventsOnDate(date);
         printDayView(date, events);
     }
 
+    /**
+     * Print a specific list of events in the day view format.
+     *
+     * @param date the date specifying the day for the day view header
+     * @param events the list of events to display
+     */
     public void printDayView(LocalDate date, ArrayList<Event> events) {
         Event event;
-        TimeInterval timeInterval;
 
         // TODO: should I set this somewhere else?
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM d yyyy");
@@ -89,13 +121,20 @@ public class MyCalender {
 
         for (int i = 0; i < events.size(); i++) {
             event = events.get(i);
-            timeInterval = event.getTimeInterval();
-            System.out.printf("%2d) [%s - %s] %s%n", i + 1, timeInterval.getStart(), timeInterval.getEnd(), event.getName());
+            System.out.printf("%2d) [%s - %s] %s%n", i + 1, event.getStartTime(), event.getEndTime(), event.getName());
         }
 
     }
 
-
+    /**
+     * Deserialize a set of events from a file.
+     *
+     * @param file the file to read from
+     * @throws FileNotFoundException
+     * TODO: verify
+     * @pre the file must exist in the file system or an exception will be thrown
+     * @post the events will be loaded into the calendar
+     */
     public void load(File file) throws FileNotFoundException {
         Event event;
         Scanner scanner = new Scanner(file);
@@ -105,15 +144,17 @@ public class MyCalender {
 
             // Read the newline character
             scanner.nextLine();
-
-            if (event.isRecurring()) {
-                addRecurringEvent(event);
-            } else {
-                addOneTimeEvent(event);
-            }
+            addEvent(event);
         }
     }
 
+    /**
+     * Serializes the collection of calendar events to a file.
+     *
+     * @param fileWriter the file to write to
+     *
+     * @post the events will be written to the specified file
+     */
     public void dump(FileWriter fileWriter) {
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
@@ -125,50 +166,109 @@ public class MyCalender {
         printWriter.close();
     }
 
+    /**
+     * Detects conflicts between the specified event and the existing collection of events.
+     *
+     * @param event the event to test conflicts against
+     *
+     * @return a list of conflicting events
+     */
     public List<Event> findConflicts(Event event) {
         return Stream.concat(eventsOneTime.stream(), eventsRecurring.stream())
                 .filter(e -> e.conflicts(event))
                 .toList();
     }
 
-    public boolean addOneTimeEvent(Event event) {
+    /**
+     * Track a new event and add it to the internal collection.
+     *
+     * @param event the event instance to track
+     *
+     * @return whether the event was added successfully
+     */
+    public boolean addEvent(Event event) {
+        if (event.isRecurring()) {
+            return eventsRecurring.add(event);
+        }
         return eventsOneTime.add(event);
     }
-    public boolean addRecurringEvent(Event event) {
-        return eventsRecurring.add(event);
-    }
-    public ArrayList<Event> getOneTimeEventsOnDate(LocalDate date) {
-        return eventsOneTime.stream()
-                .filter(event -> event.isOnDay(date))
-                .sorted(Event::compareByStartTime)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-    public ArrayList<Event> getEventsOnDate(LocalDate date) {
-        return Stream.concat(
-                        eventsOneTime.stream(),
-                        eventsRecurring.stream()
-                ).filter(event -> event.isOnDay(date))
-                .sorted(Event::compareByStartTime)
-                .collect(Collectors.toCollection(ArrayList::new));
+
+    private ArrayList<Event> filterEventsOnDay(Stream<Event> stream, LocalDate date) {
+        return stream.filter(event -> event.isOnDay(date))
+            .sorted(Comparator.comparing(Event::getStartTime))
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public boolean removeOneTimeEvent(Event event) {
+    /**
+     * Filters out and returns all the one time events that occur on
+     * a specific date.
+     *
+     * @param date the date to filter by
+     *
+     * @return a list of the one time events that occur on the specified date
+     */
+    public ArrayList<Event> getOneTimeEventsOnDate(LocalDate date) {
+        return filterEventsOnDay(eventsOneTime.stream(), date);
+    }
+
+    /**
+     * Find events that occur on a specific date.
+     *
+     * @param date the date to filter by
+     *
+     * @return a list of events that occur on the specified date
+     */
+    public ArrayList<Event> getAllEventsOnDate(LocalDate date) {
+        return filterEventsOnDay(
+                Stream.concat(
+                    eventsOneTime.stream(),
+                    eventsRecurring.stream()
+                ),
+                date
+        );
+    }
+
+    /**
+     * Remove an event from the calendar collection.
+     *
+     * @param event the event to remove
+     *
+     * @return if the event was removed successfully
+     */
+    public boolean removeEvent(Event event) {
+        if (event.isRecurring()) {
+            return eventsRecurring.remove(event);
+        }
         return eventsOneTime.remove(event);
     }
 
+    /**
+     * Finds the first recurring event that matches the name
+     * provided.
+     *
+     * @param name the name to search for
+     *
+     * @return the event if found or null
+     */
     public Event findRecurringEventByName(String name) {
         // TODO: implement fuzzy search
         return eventsRecurring.stream().filter(event -> event.getName().equals(name)).findAny().orElse(null);
     }
 
-    public boolean removeReoccurringEvent(Event event) {
-        return eventsRecurring.remove(event);
-    }
-
+    /**
+     * Access the calendar's collection of one time events.
+     *
+     * @return all the one time events
+     */
     public ArrayList<Event> getEventsOneTime() {
         return eventsOneTime;
     }
 
+    /**
+     * Access the calendar's collection of recurring events.
+     *
+     * @return all the recurring events
+     */
     public ArrayList<Event> getEventsRecurring() {
         return eventsRecurring;
     }

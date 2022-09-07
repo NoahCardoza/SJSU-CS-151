@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class MyCalendarTester {
     /**
      * Beings the program's execution.
+     *
      * @param args command line arguments.
      */
     public static void main(String[] args) {
