@@ -1,3 +1,10 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 09/12/2022
+ * @assignment My First Calendar
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -6,6 +13,9 @@ import java.time.*;
 import java.time.format.TextStyle;
 import java.util.*;
 
+/**
+ * Contains all the methods needed to interact with the stdin/out.
+ */
 public class CLI {
     private final MyCalender calender;
     private final Scanner scanner;
@@ -17,6 +27,10 @@ public class CLI {
         calender = new MyCalender();
     }
 
+    /**
+     * Loads the events serialized in the events.txt file.
+     * @return Whether the events were loaded successfully.
+     */
     private boolean loadFromFile() {
         File iFile = new File("events.txt");
 
@@ -28,6 +42,10 @@ public class CLI {
         return true;
     }
 
+    /**
+     * Serializes the current events to the output.txt file.
+     * @return Whether the events were serialized successfully.
+     */
     private boolean dumpToFile() {
         FileWriter oFile;
 
@@ -43,7 +61,6 @@ public class CLI {
     }
 
 
-
     public void mainLoop() {
         calender.printTodayCalendar();
 
@@ -54,9 +71,11 @@ public class CLI {
             return;
         }
 
-        calender.printEventCalendar();
+        calender.printMonthView();
 
         screenMainMenuLoop();
+
+        System.out.println("Good Bye!");
 
         if (dumpToFile()) {
             System.out.println("Success: Events saved to output.txt!");
@@ -65,6 +84,9 @@ public class CLI {
         }
     }
 
+    /**
+     * Contains all the logic for the main menu loop.
+     */
     private void screenMainMenuLoop() {
         char choice;
 
@@ -89,12 +111,13 @@ public class CLI {
     private void screenViewBy() {
         char choice;
 
-        choice = prompt.choice("[D]ay view or [M]onth iew", "DM");
+        choice = prompt.choice("[D]ay view or [M]onth view", "DM");
         switch (choice) {
             case 'D' -> screenViewByDay();
             case 'M' -> screenViewByMonth();
         }
     }
+
     private void screenViewByDay() {
         char choice = 0;
 
@@ -109,6 +132,7 @@ public class CLI {
             }
         }
     }
+
     private void screenViewByMonth() {
         char choice = 0;
 
@@ -123,6 +147,7 @@ public class CLI {
             }
         }
     }
+
     private void screenCreate() {
         System.out.println("Enter the details for a one-time event below:");
 
@@ -135,10 +160,7 @@ public class CLI {
 
         String name = prompt.line("Name");
         LocalDate date = prompt.date("Date");
-
-        LocalTime startTime = prompt.time("Start");
-        LocalTime endTime = prompt.time("End");
-        TimeInterval timeInterval = new TimeInterval(startTime, endTime);
+        TimeInterval timeInterval = prompt.timeInterval("Start", "End");
 
         Event event = new Event(name, date, timeInterval);
 
@@ -156,6 +178,7 @@ public class CLI {
             }
         } else {
             calender.addOneTimeEvent(event);
+            System.out.println("Success: The new event has been added to the calendar.");
         }
     }
 
@@ -171,17 +194,16 @@ public class CLI {
                         .sorted(Event::compareByStartDateAndStartTime)
                         .toList();
 
-        String yearFormat  = "| %s%n";
-        String monthFormat = "@--| %s%n";
-        String dayFormat   = "#----| %02d%n";
-        String eventFormat = "+--------| [%s - %s] %s%n";
+        String yearFormat  = "┃ ▣ %s%n";
+        String monthFormat = "┃    ◉ %s%n";
+        String dayFormat   = "┃      ▶ %02d%n";
+        String eventFormat = "┃        ◈ [%s - %s] %s%n";
 
         int currentYear = oneTimeEvents.get(0).getStartDate().getYear();
         Month currentMonth = oneTimeEvents.get(0).getStartDate().getMonth();
         int currentDay = oneTimeEvents.get(0).getStartDate().getDayOfMonth();
 
-        System.out.println("ONE-TIME EVENTS:");
-        System.out.println();
+        System.out.println("┏ ONE-TIME EVENTS ▷");
         System.out.printf(yearFormat, currentYear);
         System.out.printf(monthFormat, currentMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
         System.out.printf(dayFormat, currentDay);
@@ -206,17 +228,28 @@ public class CLI {
 
             System.out.printf(eventFormat, event.getTimeInterval().getStart(), event.getTimeInterval().getEnd(), event.getName());
         }
+        System.out.println("┗");
 
         System.out.println();
-        System.out.println("RECURRING EVENTS:");
-        System.out.println();
 
+        System.out.println("┏ RECURRING EVENTS ▷");
         calender
             .getEventsRecurring()
             .stream()
             .sorted(
                     Comparator.comparing(a -> a.getDateInterval().getStart())
-            ).forEachOrdered(System.out::println);
+            ).forEachOrdered(event -> {
+                System.out.printf(
+                        "┣ %s%n┃ [%s]  (%s - %s)%n┃ %s  --  %s%n",
+                        event.getName(),
+                        Event.repeatedDaysToStringPadded(event.getRepeatedDays()),
+                        event.getStartTime(),
+                        event.getEndTime(),
+                        event.getStartDate(),
+                        event.getEndDate()
+                );
+                });
+            System.out.println("┗");
     }
 
     private void screenDelete() {
@@ -242,6 +275,7 @@ public class CLI {
         calender.removeOneTimeEvent(events.get(eventIndex));
         System.out.println("Success: The event was removed!");
     }
+
     private void screenDeleteAllOnDay() {
         LocalDate date = prompt.date("Enter a date to clear the events from");
         ArrayList<Event> events = calender.getOneTimeEventsOnDate(date);

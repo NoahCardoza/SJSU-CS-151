@@ -1,0 +1,273 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": true,
+    "cutInterfaceStructures": true,
+    "cutDataStructures": true,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 3,
+    "backwardDepth": 3,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "Event",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1077334738 { 
+   	label=TimeInterval
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   TimeInterval1077334738[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TimeInterval</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   end: LocalTime [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   start: LocalTime [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ fromScanner(scanner: Scanner): TimeInterval</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_2018976346 { 
+   	label=MyCalender
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   MyCalender2018976346[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MyCalender</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   eventsOneTime: ArrayList&lt;Event&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   eventsRecurring: ArrayList&lt;Event&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addOneTimeEvent(event: Event): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ addRecurringEvent(event: Event): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dump(fileWriter: FileWriter)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ findConflicts(event: Event): List&lt;Event&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ findRecurringEventByName(name: String): Event</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEventsOnDate(date: LocalDate): ArrayList&lt;Event&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getOneTimeEventsOnDate(date: LocalDate): ArrayList&lt;Event&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ load(file: File)</TD></TR>
+<TR><TD ALIGN="LEFT" >- printCalendar(selectedDays: ArrayList&lt;Integer&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ printCalendar(now: YearMonth, selectedDays: ArrayList&lt;Integer&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ printDayView(date: LocalDate)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ printDayView(date: LocalDate, events: ArrayList&lt;Event&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ printEventCalendar()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ printMonthView(month: YearMonth)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ printTodayCalendar()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeOneTimeEvent(event: Event): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeReoccurringEvent(event: Event): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_635062501 { 
+   	label=Interval
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   Interval635062501[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Interval</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ overlaps(interval: Interval): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_66816 { 
+   	label=CLI
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   CLI66816[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CLI</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   calender: MyCalender [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   prompt: Prompt [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   scanner: Scanner [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- dumpToFile(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- loadFromFile(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ mainLoop()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenCreate()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenDelete()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenDeleteAllOnDay()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenDeleteInteractive()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenDeleteRecurringEvent()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenEventList()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenGoTo()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenMainMenuLoop()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenViewBy()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenViewByDay()</TD></TR>
+<TR><TD ALIGN="LEFT" >- screenViewByMonth()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_67338874 { 
+   	label=Event
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   Event67338874[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Event</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   dateInterval: DateInterval [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   recurring: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   repeatedDays: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   timeInterval: TimeInterval [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># compareByStartDateAndStartTime(a: Event, b: Event): int</TD></TR>
+<TR><TD ALIGN="LEFT" ># compareByStartTime(a: Event, b: Event): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ conflicts(event: Event): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ daysOfTheMonth(month: YearMonth): ArrayList&lt;Integer&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromScanner(scanner: Scanner): Event</TD></TR>
+<TR><TD ALIGN="LEFT" >+ isOnDay(day: LocalDate): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ repeatedDaysFromString(serialized: String): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ repeatedDaysToString(unserialized: int): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ repeatedDaysToStringPadded(unserialized: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_872874317 { 
+   	label=DateInterval
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   DateInterval872874317[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DateInterval</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   end: LocalDate [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   start: LocalDate [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ contains(month: YearMonth): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ contains(day: LocalDate): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromScanner(scanner: Scanner): DateInterval</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+'edges    
+CLI66816 -> MyCalender2018976346[label="calender
+[0..1]"];
+Event67338874 -> DateInterval872874317[label="dateInterval
+[0..1]"];
+Event67338874 -> TimeInterval1077334738[label="timeInterval
+[0..1]"];
+Interval635062501 -> DateInterval872874317[arrowhead=none, arrowtail=empty, dir=both];
+Interval635062501 -> TimeInterval1077334738[arrowhead=none, arrowtail=empty, dir=both];
+MyCalender2018976346 -> Event67338874[label="eventsOneTime
+[0..*]"];
+MyCalender2018976346 -> Event67338874[label="eventsRecurring
+[0..*]"];
+    
+}
+@enduml

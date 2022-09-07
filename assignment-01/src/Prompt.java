@@ -1,3 +1,10 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 09/12/2022
+ * @assignment My First Calendar
+ */
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -89,5 +96,18 @@ public class Prompt {
             System.out.printf("Error: Could not parse \"%s\". Please try again.%n", rawTime);
             return time(prompt);
         }
+    }
+
+    public TimeInterval timeInterval(String startPrompt, String endPrompt) {
+        LocalTime start = time(startPrompt);
+        LocalTime end = time(endPrompt);
+
+        // allow events with no time profile, e.g. as a reminder
+        if (start.compareTo(end) <= 0) {
+            return new TimeInterval(start, end);
+        }
+
+        System.out.println("Error: The first time stamp must come chronologically before the second. Please try again.");
+        return timeInterval(startPrompt, endPrompt);
     }
 }

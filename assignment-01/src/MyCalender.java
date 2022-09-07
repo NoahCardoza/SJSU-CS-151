@@ -1,3 +1,10 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 09/12/2022
+ * @assignment My First Calendar
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -27,12 +34,6 @@ public class MyCalender {
         this.printCalendar(selectedDays);
     }
 
-    public void printEventCalendar() {
-        // TODO: remove this method
-        YearMonth now = YearMonth.now();
-        printMonthView(now);
-    }
-
     public void printMonthView(YearMonth month) {
         ArrayList<Integer> selectedDays =
                 Stream.concat(
@@ -44,12 +45,16 @@ public class MyCalender {
         this.printCalendar(month, selectedDays);
     }
 
+    public void printMonthView() {
+        printMonthView(YearMonth.now());
+    }
+
     private void printCalendar(ArrayList<Integer> selectedDays) {
         YearMonth now = YearMonth.now();
         printCalendar(now, selectedDays);
     }
-    // TODO: set to private
-    public void printCalendar(YearMonth now, ArrayList<Integer> selectedDays) {
+
+    private void printCalendar(YearMonth now, ArrayList<Integer> selectedDays) {
         int firstDay = LocalDate.of(now.getYear(), now.getMonth(), 1).getDayOfWeek().getValue() % 7;
         int dayInMonth = YearMonth.of(now.getYear(), now.getMonth()).lengthOfMonth();
 
@@ -148,17 +153,15 @@ public class MyCalender {
     }
 
     public boolean removeOneTimeEvent(Event event) {
-        // TODO: split events list
         return eventsOneTime.remove(event);
     }
 
-    // TODO: implement fuzzy search
     public Event findRecurringEventByName(String name) {
+        // TODO: implement fuzzy search
         return eventsRecurring.stream().filter(event -> event.getName().equals(name)).findAny().orElse(null);
     }
 
     public boolean removeReoccurringEvent(Event event) {
-        // TODO: split events list
         return eventsRecurring.remove(event);
     }
 

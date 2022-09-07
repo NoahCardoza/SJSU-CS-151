@@ -1,8 +1,19 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 09/12/2022
+ * @assignment My First Calendar
+ */
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+/**
+ * Defines an interval of dates and provides helpful methods to
+ * detect overlaps and if a date resides between the specified dates.
+ */
 public class DateInterval extends Interval {
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private final LocalDate start;
@@ -12,25 +23,22 @@ public class DateInterval extends Interval {
         this.end = end;
     }
 
+    /**
+     * Deserializes a DateInterval instance from a scanner instance.
+     * @param scanner the scanner instance to deserialize the dates from.
+     *
+     * @return
+     */
     public static DateInterval fromScanner(Scanner scanner) {
         LocalDate start = LocalDate.parse(scanner.next(), formatter);
         LocalDate end = LocalDate.parse(scanner.next(), formatter);
         return new DateInterval(start, end);
     }
 
-//    public boolean overlaps(DateInterval dateInterval) {
-//        // TODO: does this work LOL?
-//        int startStart = this.start.compareTo(dateInterval.getStart());
-//        int endStart = this.end.compareTo(dateInterval.getStart());
-//        int startEnd = this.start.compareTo(dateInterval.getEnd());
-//        int endEnd = this.end.compareTo(dateInterval.getEnd());
-//        return startStart == 0 && endEnd == 0 ? false : (startStart < 0 && 0 < endStart) || (startEnd < 0 && 0 < endEnd);
-////        return (
-////                (this.start.compareTo(dateInterval.getStart()) < 0 && 0 < this.end.compareTo(dateInterval.getStart())) ||
-////                (this.start.compareTo(dateInterval.getEnd()) < 0 && 0 < this.end.compareTo(dateInterval.getEnd()))
-////        );
-//    }
-
+    /**
+     *
+     * @return
+     */
     public LocalDate getStart() {
         return start;
     }

@@ -1,4 +1,12 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 09/12/2022
+ * @assignment My First Calendar
+ */
+
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -33,6 +41,16 @@ public class Event {
         return serialized.toString();
     }
 
+    static public String repeatedDaysToStringPadded(int unserialized) {
+        StringBuilder serialized = new StringBuilder("       ");
+        for (int i = 0; i < 7; i++) {
+            if ((unserialized & (1 << i)) > 0) {
+                serialized.setCharAt(i, repeatedDaysString.charAt(i));
+            }
+        }
+        return serialized.toString();
+    }
+
     static public int repeatedDaysFromString(String serialized) {
         int unserialized = 0;
 
@@ -62,8 +80,6 @@ public class Event {
     }
 
     public static Event fromScanner(Scanner scanner) {
-        // TODO: ask if this is legal...
-
         String header;
         String name;
         LocalDate date;
@@ -95,9 +111,7 @@ public class Event {
     }
 
     public boolean isOnDay(LocalDate day) {
-        // TODO: maybe split days from date interval?
         if (dateInterval.contains(day)) {
-            // TODO: make sure this works LOL
             return (repeatedDays & (1 << (day.getDayOfWeek().getValue() % 7))) > 0;
         }
         return false;
@@ -160,6 +174,18 @@ public class Event {
         // hack to display the events in the list view
         return dateInterval.getStart();
     }
+    public LocalDate getEndDate() {
+        // hack to display the events in the list view
+        return dateInterval.getStart();
+    }
+
+    public LocalTime getStartTime() {
+        return timeInterval.getStart();
+    }
+
+    public LocalTime getEndTime() {
+        return timeInterval.getEnd();
+    }
 
     public String getName() {
         return name;
@@ -171,5 +197,9 @@ public class Event {
 
     public boolean isRecurring() {
         return recurring;
+    }
+
+    public int getRepeatedDays() {
+        return repeatedDays;
     }
 }

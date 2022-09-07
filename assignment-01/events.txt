@@ -1,14 +1,14 @@
-CS151 Lecture
-TR 10:30 11:45 08/23/2022 12/06/2022
-Piano Lesson
+R:CS151 Lecture
+TR 08/23/2022 12/06/2022 10:30 11:45
+O:Piano Lesson
 09/04/2022 17:00 17:45
-Dentist
+O:Dentist
 09/04/2022 13:15 14:00
-CS157C Lecture
-MW 11:45 13:15 08/22/2022 12/06/2022
-Interview at BigCorp
+R:CS157C Lecture
+MW 08/22/2022 12/06/2022 11:45 13:15
+O:Interview at BigCorp
 09/04/2022 09:30 11:30
-Dentist appt
+O:Dentist appt
 10/03/2022 16:15 17:00
-Course Committee Meeting
-F 18:30 20:30  09/20/2022 12/09/2022
+R:Course Committee Meeting
+F 09/20/2022 12/09/2022 18:30 20:30

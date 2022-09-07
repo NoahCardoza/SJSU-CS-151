@@ -1,3 +1,10 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 09/12/2022
+ * @assignment My First Calendar
+ */
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -28,13 +35,4 @@ public class TimeInterval extends Interval {
     public LocalTime getEnd() {
         return end;
     }
-
-//    public boolean overlaps(TimeInterval timeInterval) {
-//        // TODO: does this work LOL?
-//        int startStart = this.start.compareTo(timeInterval.getStart());
-//        int endStart = this.end.compareTo(timeInterval.getStart());
-//        int startEnd = this.start.compareTo(timeInterval.getEnd());
-//        int endEnd = this.end.compareTo(timeInterval.getEnd());
-//        return startStart == 0 && endEnd == 0 ? false :(startStart < 0 && 0 < endStart) || (startEnd < 0 && 0 < endEnd);
-//    }
 }
