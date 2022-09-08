@@ -24,7 +24,7 @@ public class Prompt {
      *
      * @param scanner the scanner to read input from
      */
-    Prompt (Scanner scanner) {
+    public Prompt (Scanner scanner) {
         this.scanner = scanner;
     }
 

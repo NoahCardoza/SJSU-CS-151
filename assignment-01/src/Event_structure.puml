@@ -35,14 +35,14 @@ config=StructureConfiguration;
     "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
     "removeByClassName": "",
     "cutMappings": false,
-    "cutEnum": true,
+    "cutEnum": false,
     "cutTests": true,
     "cutClient": true,
-    "cutDataAccess": true,
-    "cutInterfaceStructures": true,
-    "cutDataStructures": true,
-    "cutGetterAndSetter": true,
-    "cutConstructors": true
+    "cutDataAccess": false,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": false,
+    "cutGetterAndSetter": false,
+    "cutConstructors": false
   },
   "graphTraversal": {
     "forwardDepth": 3,
@@ -93,10 +93,10 @@ subgraph cluster_1077334738 {
 	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
 <TR><TD ALIGN="LEFT" >(C)TimeInterval</TD></TR>
 <HR/>
-<TR><TD ALIGN="LEFT" >-   end: LocalTime [0..1]</TD></TR>
-<TR><TD ALIGN="LEFT" >-   start: LocalTime [0..1]</TD></TR>
-<HR/>
+<TR><TD ALIGN="LEFT" >+ TimeInterval(start: LocalTime, end: LocalTime)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ fromScanner(scanner: Scanner): TimeInterval</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEnd(): LocalTime</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getStart(): LocalTime</TD></TR>
 </TABLE>>
 	style=filled
 	margin=0
@@ -118,23 +118,25 @@ subgraph cluster_2018976346 {
 <TR><TD ALIGN="LEFT" >-   eventsOneTime: ArrayList&lt;Event&gt; [0..*]</TD></TR>
 <TR><TD ALIGN="LEFT" >-   eventsRecurring: ArrayList&lt;Event&gt; [0..*]</TD></TR>
 <HR/>
-<TR><TD ALIGN="LEFT" >+ addOneTimeEvent(event: Event): boolean</TD></TR>
-<TR><TD ALIGN="LEFT" >+ addRecurringEvent(event: Event): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" ># MyCalender()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ addEvent(event: Event): boolean</TD></TR>
 <TR><TD ALIGN="LEFT" >+ dump(fileWriter: FileWriter)</TD></TR>
+<TR><TD ALIGN="LEFT" >- filterEventsOnDay(stream: Stream&lt;Event&gt;, date: LocalDate): ArrayList&lt;Event&gt;</TD></TR>
 <TR><TD ALIGN="LEFT" >+ findConflicts(event: Event): List&lt;Event&gt;</TD></TR>
 <TR><TD ALIGN="LEFT" >+ findRecurringEventByName(name: String): Event</TD></TR>
-<TR><TD ALIGN="LEFT" >+ getEventsOnDate(date: LocalDate): ArrayList&lt;Event&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getAllEventsOnDate(date: LocalDate): ArrayList&lt;Event&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEventsOneTime(): ArrayList&lt;Event&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEventsRecurring(): ArrayList&lt;Event&gt;</TD></TR>
 <TR><TD ALIGN="LEFT" >+ getOneTimeEventsOnDate(date: LocalDate): ArrayList&lt;Event&gt;</TD></TR>
 <TR><TD ALIGN="LEFT" >+ load(file: File)</TD></TR>
 <TR><TD ALIGN="LEFT" >- printCalendar(selectedDays: ArrayList&lt;Integer&gt;)</TD></TR>
-<TR><TD ALIGN="LEFT" >+ printCalendar(now: YearMonth, selectedDays: ArrayList&lt;Integer&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >- printCalendar(now: YearMonth, selectedDays: ArrayList&lt;Integer&gt;)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ printDayView(date: LocalDate)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ printDayView(date: LocalDate, events: ArrayList&lt;Event&gt;)</TD></TR>
-<TR><TD ALIGN="LEFT" >+ printEventCalendar()</TD></TR>
 <TR><TD ALIGN="LEFT" >+ printMonthView(month: YearMonth)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ printMonthView()</TD></TR>
 <TR><TD ALIGN="LEFT" >+ printTodayCalendar()</TD></TR>
-<TR><TD ALIGN="LEFT" >+ removeOneTimeEvent(event: Event): boolean</TD></TR>
-<TR><TD ALIGN="LEFT" >+ removeReoccurringEvent(event: Event): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeEvent(event: Event): boolean</TD></TR>
 </TABLE>>
 	style=filled
 	margin=0
@@ -151,9 +153,15 @@ subgraph cluster_635062501 {
    
    Interval635062501[
 	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
-<TR><TD ALIGN="LEFT" >(C)Interval</TD></TR>
+<TR><TD ALIGN="LEFT" >(C)Interval&lt;T extends Comparable&lt;? super T&gt;&gt;</TD></TR>
 <HR/>
-<TR><TD ALIGN="LEFT" >+ overlaps(interval: Interval): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >#   end: T [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   start: T [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ Interval(start: T, end: T)</TD></TR>
+<TR><TD ALIGN="LEFT" ># getEnd(): T</TD></TR>
+<TR><TD ALIGN="LEFT" ># getStart(): T</TD></TR>
+<TR><TD ALIGN="LEFT" >+ overlaps(interval: Interval&lt;T&gt;): boolean</TD></TR>
 </TABLE>>
 	style=filled
 	margin=0
@@ -176,6 +184,7 @@ subgraph cluster_66816 {
 <TR><TD ALIGN="LEFT" >-   prompt: Prompt [0..1]</TD></TR>
 <TR><TD ALIGN="LEFT" >-   scanner: Scanner [0..1]</TD></TR>
 <HR/>
+<TR><TD ALIGN="LEFT" ># CLI(scanner: Scanner)</TD></TR>
 <TR><TD ALIGN="LEFT" >- dumpToFile(): boolean</TD></TR>
 <TR><TD ALIGN="LEFT" >- loadFromFile(): boolean</TD></TR>
 <TR><TD ALIGN="LEFT" >+ mainLoop()</TD></TR>
@@ -214,15 +223,21 @@ subgraph cluster_67338874 {
 <TR><TD ALIGN="LEFT" >-   repeatedDays: int [1]</TD></TR>
 <TR><TD ALIGN="LEFT" >-   timeInterval: TimeInterval [0..1]</TD></TR>
 <HR/>
-<TR><TD ALIGN="LEFT" ># compareByStartDateAndStartTime(a: Event, b: Event): int</TD></TR>
-<TR><TD ALIGN="LEFT" ># compareByStartTime(a: Event, b: Event): int</TD></TR>
+<TR><TD ALIGN="LEFT" ># Event(name: String, date: LocalDate, timeInterval: TimeInterval)</TD></TR>
+<TR><TD ALIGN="LEFT" ># Event(name: String, dateInterval: DateInterval, repeatedDays: int, timeInterval: TimeInterval)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ conflicts(event: Event): boolean</TD></TR>
 <TR><TD ALIGN="LEFT" >+ daysOfTheMonth(month: YearMonth): ArrayList&lt;Integer&gt;</TD></TR>
 <TR><TD ALIGN="LEFT" >+ fromScanner(scanner: Scanner): Event</TD></TR>
-<TR><TD ALIGN="LEFT" >+ isOnDay(day: LocalDate): boolean</TD></TR>
-<TR><TD ALIGN="LEFT" >+ repeatedDaysFromString(serialized: String): int</TD></TR>
-<TR><TD ALIGN="LEFT" >+ repeatedDaysToString(unserialized: int): String</TD></TR>
-<TR><TD ALIGN="LEFT" >+ repeatedDaysToStringPadded(unserialized: int): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEndDate(): LocalDate</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEndTime(): LocalTime</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getStartDate(): LocalDate</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getStartTime(): LocalTime</TD></TR>
+<TR><TD ALIGN="LEFT" >+ isOnDay(date: LocalDate): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ isRecurring(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- repeatedDaysFromString(serialized: String): int</TD></TR>
+<TR><TD ALIGN="LEFT" >- repeatedDaysToString(unserialized: int): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ repeatedDaysToStringPadded(): String</TD></TR>
 </TABLE>>
 	style=filled
 	margin=0
@@ -241,12 +256,12 @@ subgraph cluster_872874317 {
 	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
 <TR><TD ALIGN="LEFT" >(C)DateInterval</TD></TR>
 <HR/>
-<TR><TD ALIGN="LEFT" >-   end: LocalDate [0..1]</TD></TR>
-<TR><TD ALIGN="LEFT" >-   start: LocalDate [0..1]</TD></TR>
-<HR/>
+<TR><TD ALIGN="LEFT" >+ DateInterval(start: LocalDate, end: LocalDate)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ contains(month: YearMonth): boolean</TD></TR>
-<TR><TD ALIGN="LEFT" >+ contains(day: LocalDate): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ contains(date: LocalDate): boolean</TD></TR>
 <TR><TD ALIGN="LEFT" >+ fromScanner(scanner: Scanner): DateInterval</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEnd(): LocalDate</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getStart(): LocalDate</TD></TR>
 </TABLE>>
 	style=filled
 	margin=0

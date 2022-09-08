@@ -14,30 +14,24 @@ import java.util.Scanner;
  * Defines an interval/range of dates and provides helpful methods to
  * detect overlaps and if a date resides between the specified dates.
  */
-public class DateInterval extends Interval {
+public class DateInterval extends Interval<LocalDate> {
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    private final LocalDate start;
-    private final LocalDate end;
 
     /**
-     * Constructs a new DateInterval object.
+     * Construct a DateInterval instance.
      *
-     * @param start The lower bound of the range.
-     * @param end The upper bound of the range.
+     * @param start the lower bound
+     * @param end   the upper bound
      */
-    DateInterval(LocalDate start, LocalDate end) {
+    public DateInterval(LocalDate start, LocalDate end) {
         super(start, end);
-
-        this.start = start;
-        this.end = end;
     }
 
     /**
      * Deserializes a DateInterval instance from a scanner instance.
+     * Expects scanned to contain two tokens in a row of the form "MM/dd/yyyy".
      *
      * @param scanner the scanner instance to deserialize the dates from.
-     *
-     * @pre expects scanned to contain two tokens in a row of the form "MM/dd/yyyy"
      *
      * @return a new DateInterval instance
      */
@@ -78,6 +72,12 @@ public class DateInterval extends Interval {
      */
     public boolean contains(LocalDate date) {
         return start.compareTo(date) <= 0 && 0 <= end.compareTo(date);
+    }
+
+    @Override
+    public boolean overlaps(Interval<LocalDate> date) {
+        // unlike TimeIntervals, their end dates are inclusive
+        return start.equals(date.getEnd()) || end.equals(date.getStart()) || super.overlaps(date);
     }
 
     /**

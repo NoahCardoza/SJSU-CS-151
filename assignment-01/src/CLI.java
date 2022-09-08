@@ -25,7 +25,7 @@ public class CLI {
      * Constructs a new CLI instance.
      * @param scanner the scanner to read user input from.
      */
-    CLI(Scanner scanner) {
+    public CLI(Scanner scanner) {
         this.scanner = scanner;
         prompt = new Prompt(scanner);
         calender = new MyCalender();
@@ -114,7 +114,6 @@ public class CLI {
             }
         } while (choice != 'Q');
     }
-
 
     private void screenViewBy() {
         char choice;
@@ -280,7 +279,7 @@ public class CLI {
         ArrayList<Event> events = calender.getOneTimeEventsOnDate(date);
 
         if (events.isEmpty()) {
-            System.out.println("There are one-time events scheduled that day.");
+            System.out.println("There are no one-time events scheduled that day.");
             return;
         }
 

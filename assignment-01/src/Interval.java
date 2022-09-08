@@ -5,29 +5,31 @@
  * @assignment My First Calendar
  */
 
-public abstract class Interval {
+public abstract class Interval<T extends Comparable<? super T>> {
     // TODO: should these get java docs?
-
-    public class IntervalRangeException extends RuntimeException {
-        public IntervalRangeException(String msg) {
-            super(msg);
-        }
-    }
+    protected T start;
+    protected T end;
 
     /**
-     * Validate the input of every Interval subclass.
+     * Constructs Interval subclass and ensures the
+     * arguments are stored in the correct order.
      *
      * @param start the lower bound
      * @param end the upper bound
      */
-    Interval(Comparable start, Comparable end) {
+    public Interval(T start, T end) {
+        // ensure the lower limit always is stored in this.start
         if (start.compareTo(end) > 0) {
-            throw new IntervalRangeException("Lower to upper bounds should be defined left to right.");
+            this.start = end;
+            this.end = start;
+        } else {
+            this.start = start;
+            this.end = end;
         }
     }
 
-    abstract Comparable getStart();
-    abstract Comparable getEnd();
+    abstract T getStart();
+    abstract T getEnd();
 
     /**
      * Determines if two intervals of the same type overlap.
@@ -44,11 +46,17 @@ public abstract class Interval {
      *
      * @return
      */
-    public boolean overlaps(Interval interval) {
+    public boolean overlaps(Interval<T> interval) {
         int startStart = this.getStart().compareTo(interval.getStart());
         int endStart = this.getEnd().compareTo(interval.getStart());
         int startEnd = this.getStart().compareTo(interval.getEnd());
         int endEnd = this.getEnd().compareTo(interval.getEnd());
-        return (startStart == 0 && endEnd == 0) || (startStart < 0 && 0 < endStart) || (startEnd < 0 && 0 < endEnd);
+        return (
+                // if the intervals are directly on top of each other
+                (startStart == 0 && endEnd == 0) ||
+                // if the one interval is completely inside another
+                (startStart == 1 && endEnd == -1) ||
+                (startStart < 0 && 0 < endStart) || (startEnd < 0 && 0 < endEnd)
+        );
     }
 }

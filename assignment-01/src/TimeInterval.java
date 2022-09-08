@@ -6,7 +6,6 @@
  */
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 /**
@@ -14,29 +13,22 @@ import java.util.Scanner;
  * detect overlaps and if a date resides between the specified time
  * interval.
  */
-public class TimeInterval extends Interval {
-    private final LocalTime start;
-    private final LocalTime end;
-
+public class TimeInterval extends Interval<LocalTime> {
     /**
-     * Constructs a new TimeInterval object.
-     *  TODO: how to document super?
-     * @param start The lower bound of the range.
-     * @param end The upper bound of the range.
+     * Validate the input of every Interval subclass.
+     *
+     * @param start the lower bound
+     * @param end the upper bound
      */
-    TimeInterval(LocalTime start, LocalTime end) {
+    public TimeInterval(LocalTime start, LocalTime end) {
         super(start, end);
-
-        this.start = start;
-        this.end = end;
     }
 
     /**
      * Deserializes a TimeInterval instance from a scanner instance.
+     * Expects scanned to contain two tokens in a row of the form "HH:mm"
      *
      * @param scanner the scanner instance to deserialize the timestamps from.
-     *
-     * @pre expects scanned to contain two tokens in a row of the form "HH:mm"
      *
      * @return a new TimeInterval instance
      */
@@ -59,6 +51,7 @@ public class TimeInterval extends Interval {
 
     /**
      * Accesses the start time
+     *
      * @return the start time
      */
     public LocalTime getStart() {
@@ -67,6 +60,7 @@ public class TimeInterval extends Interval {
 
     /**
      * Accesses the end time
+     *
      * @return the end time
      */
     public LocalTime getEnd() {

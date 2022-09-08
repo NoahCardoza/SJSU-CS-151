@@ -30,7 +30,7 @@ public class MyCalender {
     /**
      * Constructs a calendar instance.
      */
-    MyCalender() {
+    public MyCalender() {
         this.eventsOneTime = new ArrayList<>();
         this.eventsRecurring = new ArrayList<>();
     }
@@ -131,8 +131,8 @@ public class MyCalender {
      *
      * @param file the file to read from
      * @throws FileNotFoundException
-     * TODO: verify
-     * @pre the file must exist in the file system or an exception will be thrown
+     *
+     * @pre the file must exist in the file system and be of valid format or an exception will be thrown
      * @post the events will be loaded into the calendar
      */
     public void load(File file) throws FileNotFoundException {
@@ -184,6 +184,8 @@ public class MyCalender {
      *
      * @param event the event instance to track
      *
+     * @post Tracks the passed event internally.
+     *
      * @return whether the event was added successfully
      */
     public boolean addEvent(Event event) {
@@ -230,6 +232,8 @@ public class MyCalender {
 
     /**
      * Remove an event from the calendar collection.
+     *
+     * @post Updated the internal collection of events.
      *
      * @param event the event to remove
      *

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- *
+ * Contains all event specific information and (de)serialization logic.
  */
 public class Event {
     private final String name;
@@ -96,8 +96,7 @@ public class Event {
     /**
      * Deserialized an event from a scanner object.
      *
-     * @pre Expects the scanner to provide information in the form:
-     *
+     * --- Event format specs --------------------------
      * [O|R (one-time|recurring)]:[name (with spaces)]$
      * [SMTWRFA (days to repeat on)] [MM/dd/yyyy (start date)] [MM/dd/yyyy (end date)] [HH:mm (start time)] [HH:mm (end time)]$
      *
@@ -105,6 +104,7 @@ public class Event {
      *
      * R:CS151 Lecture$
      * TR 08/23/2022 12/06/2022 10:30 11:45$
+     * -------------------------------------------------
      *
      * @param scanner the scanner instance to read from
      *
@@ -280,5 +280,14 @@ public class Event {
      */
     public boolean isRecurring() {
         return recurring;
+    }
+
+    /**
+     * Access the event's repeating days bitmask.
+     *
+     * @return the event's repeating days bitmask
+     */
+    public int getRepeatedDays() {
+        return repeatedDays;
     }
 }

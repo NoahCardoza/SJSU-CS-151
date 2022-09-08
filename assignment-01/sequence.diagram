@@ -1,0 +1,53 @@
+// https://app.zenuml.com/
+MyCalendarTester.main {
+  CLI.mainLoop {
+    Prompt.choice {
+      return "user choice: 'C'"
+    }
+    Prompt.line {
+      return "event name"
+    }
+    Prompt.date {
+      return "event date"
+    }
+    Prompt.timeInterval {
+      return "event time range"
+    }
+
+    MyCalendar.findConflicts {
+      for ("each internal event") {
+        Event.conflicts {
+          DateInterval.overlaps {
+            return "if the dates overlap"
+          }
+          TimeInterval.overlaps {
+            return "if the times overlap"
+          }
+          return "if the events overlap"
+       }
+    }
+      return "array of conflicting events"
+
+  }
+
+    if (conflicts) {
+      // print event details out at the end of the loop
+      while ("each event") {
+        Event.getStartTime {
+          return "event start time"
+        }
+        Event.getEndTime {
+          return "event end time"
+        }
+        Event.getName {
+          return "event name"
+        }
+
+      }
+    } else {
+      MyCalendar.addEvent
+    }
+  }
+}
+
+
