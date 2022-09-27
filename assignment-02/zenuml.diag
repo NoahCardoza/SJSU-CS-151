@@ -1,0 +1,44 @@
+Main.main {
+  CLI.mainLoop {
+    screenMainMenu {
+
+      // main menu options
+      Prompt.choice {
+        return "add passenger"
+      }
+
+      // get: passenger name
+      Prompt.line {
+        return
+      }
+
+
+      exists = Manifest.getReservationByName
+
+      if (!exists) {
+
+        // get: service class
+        Prompt.choice {
+          return
+        }
+
+        // get: seating preferences
+        Prompt.choice {
+          return
+        }
+
+        if (window) {
+          reservation = Manifest.reserveWindowSeat
+        } else if (center) {
+          reservation = Manifest.reserveEconomyCenterSeat
+        } else if (aisle) {
+          reservation = Manifest.reserveAisleSeat
+        }
+
+        if (reservation) {
+          receipt = Reservation.getReceipt()
+        }
+      }
+    }
+  }
+}
