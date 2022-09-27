@@ -12,7 +12,7 @@ import java.util.Scanner;
 /**
  * The class containing the main method.
  */
-public class Main {
+public class RegistrationSystem {
     /**
      * The main method of the program. Responsible for reservation
      * information from a default or specified file. Saves on exit.
@@ -24,29 +24,30 @@ public class Main {
      *                     be written to
      */
     public static void main(String[] args) throws IOException {
-        ReservationSystem reservationSystem;
+        Manifest manifest;
         String saveToPath = "CL34.dat";
 
         if (args.length == 1) {
             saveToPath = args[0];
         } else if (args.length > 1) {
             System.err.println("Error: Only expecting up to one argument");
+            System.exit(1);
         }
 
         File file = new File(saveToPath);
 
         if (file.exists()) {
-            System.err.println("Info: Loading previous flight manifest");
-            reservationSystem = ReservationSystem.load(file);
+            System.out.println("Info: Loading previous flight manifest");
+            manifest = Manifest.load(file);
         } else {
-            System.err.println("Info: Creating new flight manifest database");
+            System.out.println("Info: Creating new flight manifest database");
             file.createNewFile();
-            reservationSystem = new ReservationSystem();
+            manifest = new Manifest();
         }
 
-        new CLI(reservationSystem, System.out, new Scanner(System.in)).mainLoop();
+        new CLI(manifest, System.out, new Scanner(System.in)).mainLoop();
 
-        System.err.println("Info: Saving flight manifest to database");
-        reservationSystem.dump(file);
+        System.out.println("Info: Saving flight manifest to database");
+        manifest.dump(file);
     }
 }

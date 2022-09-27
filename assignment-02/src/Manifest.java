@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Contains all the logic that dictates how reservations
  * are reserved, stored, and queried.
  */
-public class ReservationSystem {
+public class Manifest {
     private final byte numberFirstClassRows = 2;
 //  private byte numberEconomyClassRows = 30;
 
@@ -43,8 +43,12 @@ public class ReservationSystem {
     /**
      * Used to pass lambda functions to the reserveWrapper method.
      */
-    interface ReserveLoader {
-        // TODO: do I have to jdoc this?
+    private interface ReserveLoader {
+        /**
+         * Chooses which parameters to pass to the reserve method.
+         *
+         * @return the reservation from the reserve method
+         */
         Reservation operation();
     }
 
@@ -119,9 +123,9 @@ public class ReservationSystem {
     }
 
     /**
-     * Constructs a new ReservationSystem
+     * Constructs a new Manifest
      */
-    public ReservationSystem() {
+    public Manifest() {
         reservations = new HashMap<>();
         firstClassRows = new byte[]{
               //  DCBA
@@ -231,23 +235,25 @@ public class ReservationSystem {
                             // if we find a slot that can hold all the people, skip to the end
                             if (size >= people.size()) {
                                 submasks.clear();
-                                submasks.add(new SeatReservationMask(mask, size, 0));
+                                submasks.add(new SeatReservationMask(mask, size, i));
                                 break;
                             }
-                            submasks.add(new SeatReservationMask(mask, size, 0));
+                            submasks.add(new SeatReservationMask(mask, size, i));
                             size = 0;
                             mask = 0;
                         }
                     }
                 }
+
+                // make sure the left over empty space isn't ignored
                 if (size > 0) {
                     // if we find a slot that can hold all the people, skip to the end
                     if (size >= people.size()) {
                         submasks.clear();
-                        submasks.add(new SeatReservationMask(mask, size, 0));
+                        submasks.add(new SeatReservationMask(mask, size, i));
                         break;
                     }
-                    submasks.add(new SeatReservationMask(mask, size, 0));
+                    submasks.add(new SeatReservationMask(mask, size, i));
                 }
             }
 
@@ -259,19 +265,20 @@ public class ReservationSystem {
             }
             i++;
         }
+
         Iterator<SeatReservationMask> submaskIter;
         // make sure we actually need to sort before we do
         if (peopleIter.hasNext()) {
-
-            submasks.sort(Comparator.comparing(SeatReservationMask::getSize).thenComparing(SeatReservationMask::getRow).reversed());
+            submasks.sort(Comparator.comparing(SeatReservationMask::getSize, Comparator.reverseOrder()).thenComparing(SeatReservationMask::getRow));
+            System.out.println(submasks);
             submaskIter = submasks.iterator();
 
             while (peopleIter.hasNext() && submaskIter.hasNext()) {
-                // TODO: optimize for filling in the largest row that seats the rest of the whole group if possible
-                // submaskIter = submasks.stream().filter(group -> peopleLeftToSeat.get() >= group.getSize()).iterator();
+                // TODO: optimize for filling in the largest row that seats the rest of the whole group exactly if possible
                 seatReservationMask = submaskIter.next();
 
                 i = 0;
+                // clip the mask if not the total amount of people could fit
                 seatingMask = 0;
                 column = getFirstColumn(seatReservationMask.getMask());
 
@@ -282,7 +289,6 @@ public class ReservationSystem {
                     i++;
                 }
 
-                // clip the mask if not the total amount of people could fit
                 seatingMasks.add(new AbstractMap.SimpleEntry<>(seatReservationMask.getRow(), seatingMask));
             }
         }
@@ -461,6 +467,7 @@ public class ReservationSystem {
     public String getManifest() {
         StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
         stringJoiner.add("Manifest:");
+        stringJoiner.add("  Seats:");
         stringJoiner.add(
                 reservations.entrySet()
                         .stream()
@@ -471,48 +478,60 @@ public class ReservationSystem {
                                         .thenComparing(Seat::getSeat)
                         )
                         .map(Seat::formatForManifest)
+                        .map(line -> "    " + line)
                         .collect(Collectors.joining(System.lineSeparator()))
         );
+        String groupSection = reservations.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isGroup())
+                .map((entry) -> String.format("    %s:%n%s", entry.getKey(), entry.getValue().getSeatsStream().map(Seat::formatForManifest).map(line -> "      " + line).collect(Collectors.joining(System.lineSeparator()))))
+                .collect(Collectors.joining(System.lineSeparator()));
+
+        if (groupSection.length() > 0) {
+            stringJoiner.add("  Groups:");
+            stringJoiner.add(groupSection);
+        }
+
         return stringJoiner.toString();
     }
 
     /**
-     * Deserializes a ReservationSystem instance from a file.
+     * Deserializes a Manifest instance from a file.
      *
      * @param file the file to read from
      *
-     * @return a new ReservationSystem instance
+     * @return a new Manifest instance
      *
      * @throws FileNotFoundException if the file doesn't exist
      */
-    static public ReservationSystem load(File file) throws FileNotFoundException {
+    static public Manifest load(File file) throws FileNotFoundException {
         return deserialize(new Scanner(file));
     }
 
     /**
-     * Deserializes a ReservationSystem instance from a string.
+     * Deserializes a Manifest instance from a string.
      *
      * @param serialized the string to interpret
      *
-     * @return a new ReservationSystem instance
+     * @return a new Manifest instance
      */
-    static public ReservationSystem loads(String serialized) {
+    static public Manifest loads(String serialized) {
         return deserialize(new Scanner(serialized));
     }
 
 
-    static private ReservationSystem deserialize(Scanner scanner) {
-        ReservationSystem reservationSystem = new ReservationSystem();
+    static private Manifest deserialize(Scanner scanner) {
+        Manifest manifest = new Manifest();
 
         while (scanner.hasNext()) {
-            reservationSystem.addReservation(Reservation.deserialize(scanner));
+            manifest.addReservation(Reservation.deserialize(scanner));
         }
 
-        return reservationSystem;
+        return manifest;
     }
 
     /**
-     * Serializes a ReservationSystem to a file.
+     * Serializes a Manifest to a file.
      *
      * @param file the file to write to
      *
@@ -523,9 +542,9 @@ public class ReservationSystem {
     }
 
     /**
-     * Serializes a ReservationSystem to a string.
+     * Serializes a Manifest to a string.
      *
-     * @return a String containing a serialized ReservationSystem instance
+     * @return a String containing a serialized Manifest instance
      */
     public String dumps() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();

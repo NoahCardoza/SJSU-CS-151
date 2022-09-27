@@ -9,24 +9,22 @@ import java.io.PrintStream;
 import java.util.*;
 
 /**
- * Wraps a ReservationSystem to interface with user input.
+ * Wraps a Manifest to interface with user input.
  */
 public class CLI {
-    private final ReservationSystem reservationSystem;
-    private final Scanner scanner;
+    private final Manifest manifest;
     private final Prompt prompt;
     private final PrintStream output;
 
     /**
      * Constructs a new CLI instance.
-     * @param reservationSystem the reservation system to provide the interface for
+     * @param manifest the reservation system to provide the interface for
      * @param output the print stream to place output
      * @param scanner the scanner to read user input from.
      */
-    public CLI(ReservationSystem reservationSystem, PrintStream output, Scanner scanner) {
+    public CLI(Manifest manifest, PrintStream output, Scanner scanner) {
         this.output = output;
-        this.scanner = scanner;
-        this.reservationSystem = reservationSystem;
+        this.manifest = manifest;
 
         prompt = new Prompt(output, scanner);
     }
@@ -72,7 +70,7 @@ public class CLI {
         Reservation reservation;
 
         reservationName = prompt.line("Group Name");
-        if (reservationSystem.getReservationByName(reservationName) != null) {
+        if (manifest.getReservationByName(reservationName) != null) {
             output.println("Error: A reservation already exists for this group name.");
             return;
         }
@@ -81,7 +79,7 @@ public class CLI {
 
         List<String> people = prompt.lines("Enter passenger names below (enter an empty line to contine)");
 
-        reservation = reservationSystem.reserveGroup(reservationName, people, isFirstClass);
+        reservation = manifest.reserveGroup(reservationName, people, isFirstClass);
 
         if (reservation == null) {
             output.println("Error: Could not place all group members in the selected service class.");
@@ -98,7 +96,7 @@ public class CLI {
         Reservation reservation;
 
         reservationName = prompt.line("Name");
-        if (reservationSystem.getReservationByName(reservationName) != null) {
+        if (manifest.getReservationByName(reservationName) != null) {
             output.println("Error: A reservation already exists for someone by this name.");
             return;
         }
@@ -112,9 +110,9 @@ public class CLI {
         }
 
         reservation = switch (seatingPreference) {
-            case 'W' -> reservationSystem.reserveWindowSeat(reservationName, isFirstClass);
-            case 'C' -> reservationSystem.reserveEconomyCenterSeat(reservationName);
-            case 'A' -> reservationSystem.reserveAisleSeat(reservationName, isFirstClass);
+            case 'W' -> manifest.reserveWindowSeat(reservationName, isFirstClass);
+            case 'C' -> manifest.reserveEconomyCenterSeat(reservationName);
+            case 'A' -> manifest.reserveAisleSeat(reservationName, isFirstClass);
             default -> null;
         };
 
@@ -127,13 +125,13 @@ public class CLI {
     }
 
     private void screenPrintManifest() {
-        output.println(reservationSystem.getManifest());
+        output.println(manifest.getManifest());
     }
 
     private void screenAvailabilityChart() {
         output.println("Availability List:");
-        output.println(reservationSystem.getFirstClassAvailabilityList());
-        output.println(reservationSystem.getEconomyClassAvailabilityList());
+        output.println(manifest.getFirstClassAvailabilityList());
+        output.println(manifest.getEconomyClassAvailabilityList());
     }
 
     private void screenCancelReservation() {
@@ -148,7 +146,11 @@ public class CLI {
     private void screenCancelReservationIndividual() {
         String reservationName = prompt.line("Name");
 
-        Reservation reservation = reservationSystem.getReservationByName(reservationName);
+        if (reservationName.length() == 0) {
+            return;
+        }
+
+        Reservation reservation = manifest.getReservationByName(reservationName);
 
         if (reservation == null || reservation.isGroup()) {
             output.println("Error: Reservation not found.");
@@ -156,15 +158,23 @@ public class CLI {
             return;
         }
 
-        reservationSystem.cancelReservation(reservation);
+        manifest.cancelReservation(reservation);
 
-        output.println("Success: Reservation cancelled.");
+        output.println("Success: Reservation cancelled:");
+        output.println(reservation.getReceipt());
+
+        output.println("Enter another name or press RETURN to return to main menu.");
+        screenCancelReservationIndividual();
     }
 
     private void screenCancelReservationGroup() {
         String reservationName = prompt.line("Group Name");
 
-        Reservation reservation = reservationSystem.getReservationByName(reservationName);
+        if (reservationName.length() == 0) {
+            return;
+        }
+
+        Reservation reservation = manifest.getReservationByName(reservationName);
 
         if (reservation == null || !reservation.isGroup()) {
             output.println("Error: Reservation not found.");
@@ -172,8 +182,12 @@ public class CLI {
             return;
         }
 
-        reservationSystem.cancelReservation(reservation);
+        manifest.cancelReservation(reservation);
 
-        output.println("Success: Group reservation cancelled.");
+        output.println("Success: Group reservation cancelled:");
+        output.println(reservation.getReceipt());
+
+        output.println("Enter another name or press RETURN to return to main menu.");
+        screenCancelReservationGroup();
     }
 }

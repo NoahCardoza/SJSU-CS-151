@@ -2,14 +2,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CLITest {
-    ReservationSystem reservationSystem;
+    Manifest manifest;
     CLI cli;
 
     PipedInputStream pipeIn;
@@ -26,8 +24,8 @@ class CLITest {
         stdout = new ByteArrayOutputStream();
         stdin = new OutputStreamWriter(pipeOut);
 
-        reservationSystem = new ReservationSystem();
-        cli = new CLI(reservationSystem, new PrintStream(stdout), new Scanner(pipeIn));
+        manifest = new Manifest();
+        cli = new CLI(manifest, new PrintStream(stdout), new Scanner(pipeIn));
 
         //        System.out.println(stdout.toString());
 //        stdout.reset();
@@ -45,7 +43,7 @@ class CLITest {
         stdin.flush();
         cli.screenMainMenu();
 
-        reservation = reservationSystem.getReservationByName("Noah Cardoza");
+        reservation = manifest.getReservationByName("Noah Cardoza");
 
         assertEquals("1A", reservation.getSeats().get(0).toString());
 
@@ -57,7 +55,7 @@ class CLITest {
         stdin.flush();
         cli.screenMainMenu();
 
-        reservation = reservationSystem.getReservationByName("Izzy Revera");
+        reservation = manifest.getReservationByName("Izzy Revera");
 
         assertEquals("1D", reservation.getSeats().get(0).toString());
 
@@ -70,7 +68,7 @@ class CLITest {
         stdin.flush();
         cli.screenMainMenu();
 
-        reservation = reservationSystem.getReservationByName("MLH Party");
+        reservation = manifest.getReservationByName("MLH Party");
 
 
         assertEquals("1B", reservation.getSeats().get(0).toString());
@@ -83,10 +81,15 @@ class CLITest {
         assertEquals("Select one of the following main menu options:\n" +
                 "Add [P]assenger, Add [G]roup, [C]ancel Reservations, Print Seating [A]vailability Chart, Print [M]anifest, [Q]uit\n" +
                 "Manifest:\n" +
-                "1A: Noah Cardoza\n" +
-                "1B: Swift\n" +
-                "1C: Amanda\n" +
-                "1D: Izzy Revera\n", stdout.toString());
+                "  Seats:\n" +
+                "    1A: Noah Cardoza\n" +
+                "    1B: Swift\n" +
+                "    1C: Amanda\n" +
+                "    1D: Izzy Revera\n" +
+                "  Groups:\n" +
+                "    MLH Party:\n" +
+                "      1B: Swift\n" +
+                "      1C: Amanda\n", stdout.toString());
     }
 
 //    @Test
@@ -104,7 +107,7 @@ class CLITest {
 //        stdin.flush();
 //        cli.screenMainMenu();
 //
-//        reservation = reservationSystem.getReservationByName("Noah Cardoza");
+//        reservation = manifest.getReservationByName("Noah Cardoza");
 //
 //        assertEquals("1A", reservation.getSeats().get(0).toString());
 //
@@ -116,7 +119,7 @@ class CLITest {
 //        stdin.flush();
 //        cli.screenMainMenu();
 //
-//        reservation = reservationSystem.getReservationByName("Izzy Revera");
+//        reservation = manifest.getReservationByName("Izzy Revera");
 //
 //        assertEquals("1D", reservation.getSeats().get(0).toString());
 //
@@ -129,7 +132,7 @@ class CLITest {
 //        stdin.flush();
 //        cli.screenMainMenu();
 //
-//        reservation = reservationSystem.getReservationByName("MLH Party");
+//        reservation = manifest.getReservationByName("MLH Party");
 //
 //
 //        assertEquals("1B", reservation.getSeats().get(0).toString());

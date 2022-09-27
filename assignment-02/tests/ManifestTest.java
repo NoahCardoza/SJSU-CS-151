@@ -2,17 +2,16 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.module.FindException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ReservationSystemTest {
+class ManifestTest {
 
     @Test
     void reserveWindowSeat() {
-        ReservationSystem rs = new ReservationSystem();
+        Manifest rs = new Manifest();
 
         // test first class
         assertEquals(
@@ -64,7 +63,7 @@ class ReservationSystemTest {
 
     @Test
     void reserveAisleSeat() {
-        ReservationSystem rs = new ReservationSystem();
+        Manifest rs = new Manifest();
 
         // test first class
         assertEquals(
@@ -116,7 +115,7 @@ class ReservationSystemTest {
 
     @Test
     void reserveEconomyCenterSeat() {
-        ReservationSystem rs = new ReservationSystem();
+        Manifest rs = new Manifest();
 
         // test economy class
         assertEquals(
@@ -142,35 +141,44 @@ class ReservationSystemTest {
 
     @Test
     void general() {
-        ReservationSystem reservationSystem = new ReservationSystem();
+        Manifest manifest = new Manifest();
 
-        Reservation noahCardoza = reservationSystem.reserveWindowSeat("Noah Cardoza", true);
-        reservationSystem.reserveAisleSeat("Izzy Revera", false).getSeats().get(0).toString();
-        reservationSystem.reserveEconomyCenterSeat("Josh Rider").getSeats().get(0).toString();
+        Reservation noahCardoza = manifest.reserveWindowSeat("Noah Cardoza", true);
+        manifest.reserveAisleSeat("Izzy Revera", false).getSeats().get(0).toString();
+        manifest.reserveEconomyCenterSeat("Josh Rider").getSeats().get(0).toString();
         List<String> people = new ArrayList<>();
         people.add("Jason");
         people.add("Tammy");
         people.add("Zoe");
         people.add("Quinn");
         people.add("Tegan");
-        reservationSystem.reserveGroup("Wicks Family", people, true);
+        manifest.reserveGroup("Wicks Family", people, true);
 
         assertEquals("Manifest:\n" +
-                "1A: Noah Cardoza\n" +
-                "1B: Tegan\n" +
-                "2A: Jason\n" +
-                "2B: Tammy\n" +
-                "2C: Zoe\n" +
-                "2D: Quinn\n" +
-                "3B: Josh Rider\n" +
-                "3C: Izzy Revera", reservationSystem.getManifest());
+                "  Seats:\n" +
+                "    1A: Noah Cardoza\n" +
+                "    1B: Tegan\n" +
+                "    2A: Jason\n" +
+                "    2B: Tammy\n" +
+                "    2C: Zoe\n" +
+                "    2D: Quinn\n" +
+                "    3B: Josh Rider\n" +
+                "    3C: Izzy Revera\n" +
+                "  Groups:\n" +
+                "    Wicks Family:\n" +
+                "      1B: Tegan\n" +
+                "      2A: Jason\n" +
+                "      2B: Tammy\n" +
+                "      2C: Zoe\n" +
+                "      2D: Quinn", manifest.getManifest());
 
-        reservationSystem.cancelReservation(noahCardoza);
-        reservationSystem.cancelReservation(reservationSystem.getReservationByName("Wicks Family"));
+        manifest.cancelReservation(noahCardoza);
+        manifest.cancelReservation(manifest.getReservationByName("Wicks Family"));
 
         assertEquals("Manifest:\n" +
-                "3B: Josh Rider\n" +
-                "3C: Izzy Revera", reservationSystem.getManifest());
+                "  Seats:\n" +
+                "    3B: Josh Rider\n" +
+                "    3C: Izzy Revera", manifest.getManifest());
     }
 
     /**
@@ -180,32 +188,32 @@ class ReservationSystemTest {
     void readAndWrite() {
 //        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
 
-        ReservationSystem reservationSystem = new ReservationSystem();
+        Manifest manifest = new Manifest();
 
-        Reservation noahCardoza = reservationSystem.reserveWindowSeat("Noah Cardoza", true);
-        reservationSystem.reserveAisleSeat("Izzy Revera", false).getSeats().get(0).toString();
-        reservationSystem.reserveEconomyCenterSeat("Josh Rider").getSeats().get(0).toString();
+        Reservation noahCardoza = manifest.reserveWindowSeat("Noah Cardoza", true);
+        manifest.reserveAisleSeat("Izzy Revera", false).getSeats().get(0).toString();
+        manifest.reserveEconomyCenterSeat("Josh Rider").getSeats().get(0).toString();
         List<String> people = new ArrayList<>();
         people.add("Jason");
         people.add("Tammy");
         people.add("Zoe");
         people.add("Quinn");
         people.add("Tegan");
-        reservationSystem.reserveGroup("Wicks Family", people, true);
+        manifest.reserveGroup("Wicks Family", people, true);
 
-        String serialization = reservationSystem.dumps();
+        String serialization = manifest.dumps();
         System.out.println(serialization);
-        ReservationSystem reservationSystemFromFile = ReservationSystem.loads(serialization);
-        assertEquals(reservationSystem.getManifest(), reservationSystemFromFile.getManifest());
-        assertEquals(reservationSystem.getFirstClassAvailabilityList(), reservationSystemFromFile.getFirstClassAvailabilityList());
-        assertEquals(reservationSystem.getEconomyClassAvailabilityList(), reservationSystemFromFile.getEconomyClassAvailabilityList());
+        Manifest manifestFromFile = Manifest.loads(serialization);
+        assertEquals(manifest.getManifest(), manifestFromFile.getManifest());
+        assertEquals(manifest.getFirstClassAvailabilityList(), manifestFromFile.getFirstClassAvailabilityList());
+        assertEquals(manifest.getEconomyClassAvailabilityList(), manifestFromFile.getEconomyClassAvailabilityList());
 
-//        reservationSystemFromFile.getReservationByName("Noah Cardoza", "Izzy Revera", "Josh Rider", "Wicks Family")
+//        manifestFromFile.getReservationByName("Noah Cardoza", "Izzy Revera", "Josh Rider", "Wicks Family")
     }
 
     @Test
     void largeGroup() {
-        ReservationSystem reservationSystem = new ReservationSystem();
+        Manifest manifest = new Manifest();
         List<String> people = new ArrayList<>();
         people.add("Jason");
         people.add("Tammy");
@@ -222,7 +230,7 @@ class ReservationSystemTest {
         people.add("Zoe");
         people.add("Quinn");
         people.add("Tegan");
-        reservationSystem.reserveGroup("Wicks Family", people, false);
+        manifest.reserveGroup("Wicks Family", people, false);
 
         people = new ArrayList<>();
         people.add("Jason");
@@ -233,13 +241,84 @@ class ReservationSystemTest {
         people.add("Tegan");
         people.add("Quinn");
         people.add("Quinn");
-        reservationSystem.reserveGroup("x2 Wicks Family", people, false);
-        System.out.println(reservationSystem.getEconomyClassAvailabilityList());
+        manifest.reserveGroup("x2 Wicks Family", people, false);
+        System.out.println(manifest.getEconomyClassAvailabilityList());
     }
 
     @Test
+    void order() {
+        Manifest manifest = new Manifest();
+        List<String> people = new ArrayList<>();
+
+        people.add("Jason");
+        people.add("Tammy");
+        people.add("Zoe");
+        people.add("Quinn");
+        people.add("Tegan");
+        people.add("Jason");
+        people.add("Tammy");
+        people.add("Zoe");
+        people.add("Quinn");
+        people.add("Tegan");
+        people.add("Jason");
+        people.add("Tammy");
+        people.add("Zoe");
+        people.add("Quinn");
+        manifest.reserveGroup("1", people, false);
+
+        people.add("Tammy");
+        people.add("Jason");
+        people.add("Zoe");
+        people.add("Quinn");
+        people.add("Tegan");
+        people.add("Jason");
+        people.add("Tammy");
+        people.add("Zoe");
+        people.add("Quinn");
+        people.add("Tegan");
+        people.add("Jason");
+        people.add("Tammy");
+        manifest.reserveGroup("2", people, false);
+
+        people.add("Tammy");
+        people.add("Jason");
+        people.add("Zoe");
+        people.add("Quinn");
+
+
+        manifest.reserveGroup("3", people, false);
+
+        people.add("Tammy");
+        people.add("Jason");
+        people.add("Zoe");
+
+        people.add("Jason");
+        people.add("Tammy");
+        people.add("Jason");
+        people.add("Jason");
+        people.add("Jason");
+        people.add("Jason");
+        manifest.reserveGroup("4", people, false);
+
+        people = new ArrayList<>();
+
+        people.add("Jason");
+        people.add("Tammy");
+        people.add("Zoe");
+        people.add("Quinn");
+        people.add("Tammy");
+
+
+        manifest.reserveGroup("5", people, false);
+
+        System.out.println(manifest.getEconomyClassAvailabilityList());
+    }
+
+
+
+    @Test
     void noOverLap() {
-        ReservationSystem reservationSystem = new ReservationSystem();
+        Manifest reservationSystem = new Manifest();
         Reservation reservation;
         ArrayList<String> people;
 
@@ -265,9 +344,9 @@ class ReservationSystemTest {
 
         reservation = reservationSystem.reserveGroup("Wick", people, true);
 
-        assertEquals("1C", reservation.getSeats().get(0).toString());
-        assertEquals("1D", reservation.getSeats().get(1).toString());
-        assertEquals("1A", reservation.getSeats().get(2).toString());
+        assertEquals("1A", reservation.getSeats().get(0).toString());
+        assertEquals("1C", reservation.getSeats().get(1).toString());
+        assertEquals("1D", reservation.getSeats().get(2).toString());
 
         String manifest = reservationSystem.getManifest();
         String firstClassAvailabilityList = reservationSystem.getFirstClassAvailabilityList();
@@ -286,15 +365,15 @@ class ReservationSystemTest {
     @Test
     void lastWindowSeatFirstClass() throws FileNotFoundException {
         File file = new File("./tests/data/lastWindowSeatFirstClass.dat");
-        ReservationSystem reservationSystem = ReservationSystem.load(file);
+        Manifest manifest = Manifest.load(file);
 
-        Reservation reservation = reservationSystem.reserveWindowSeat("James", true);
+        Reservation reservation = manifest.reserveWindowSeat("James", true);
 
         assertNotNull(reservation);
 
         assertEquals("2D", reservation.getSeats().get(0).toString());
 
-        System.out.println(reservationSystem.getFirstClassAvailabilityList());
+        System.out.println(manifest.getFirstClassAvailabilityList());
     }
 
 }

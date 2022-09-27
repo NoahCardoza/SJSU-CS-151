@@ -51,6 +51,9 @@ public class Reservation {
     public Reservation(String name, List<Seat> seats, boolean firstClass) {
         this.name = name;
         this.seats = seats;
+
+        // ensure seats are sorted
+        this.seats.sort(Comparator.comparing(Seat::getRow).thenComparing(Seat::getSeat));
         this.firstClass = firstClass;
         this.group = true;
     }
@@ -117,10 +120,10 @@ public class Reservation {
                                 TreeMap::new,
                                 Collectors.reducing(
                                         (byte)0,
-                                        (seat) -> ReservationSystem.columnToBitmask(seat.getSeat()),
+                                        (seat) -> Manifest.columnToBitmask(seat.getSeat()),
                                         (a, b) -> (byte)(a | b))))
                 .entrySet().stream()
-                .map(entry -> String.format("%s: %s", entry.getKey() + 1, ReservationSystem.getAvailableColumns(entry.getValue())))
+                .map(entry -> String.format("%s: %s", entry.getKey() + 1, Manifest.getAvailableColumns(entry.getValue())))
                 .collect(Collectors.joining(System.lineSeparator())));
 
         joiner.add("Itinerary:");
