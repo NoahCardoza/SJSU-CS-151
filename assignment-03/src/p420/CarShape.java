@@ -9,11 +9,10 @@ import java.awt.geom.Rectangle2D;
 /**
  A car that can be moved around.
 
- @author Textbook
+ @author Textbook, modified by Noah Cadoza
  */
 public class CarShape implements MovableShape
 {
-
     private final Color color;
     private final int speed;
     private int x;
@@ -27,7 +26,7 @@ public class CarShape implements MovableShape
      * @param x     the left of the bounding rectangle
      * @param y     the top of the bounding rectangle
      * @param scale the width of the bounding rectangle
-     * @param color
+     * @param color the color of the car
      */
     public CarShape(int x, int y, float scale, int speed, Color color)
     {
@@ -39,7 +38,8 @@ public class CarShape implements MovableShape
     }
 
     @Override
-    public void draw(Graphics2D g2)
+    public void
+    draw(Graphics2D g2)
     {
         g2.setColor(this.color);
         Rectangle2D.Double body = new Rectangle2D.Double(x, y + scale * SCALE / 6, scale * SCALE - 1, scale * SCALE / 6);

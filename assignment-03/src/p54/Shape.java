@@ -3,7 +3,7 @@ package p54;
 import java.awt.*;
 
 /**
- * A generic shape
+ * A generic shape interface
  */
 public interface Shape {
     /**

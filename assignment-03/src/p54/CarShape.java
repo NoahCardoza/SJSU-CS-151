@@ -1,7 +1,5 @@
 package p54;
 
-import p420.MovableShape;
-
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -9,16 +7,16 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- A car that can be moved around.
+ A car that can be resized.
 
- @author Textbook
+ @author Textbook, modified by Noah Cadoza
  */
-public class CarShape implements RescalableShape, MovableShape
+public class CarShape implements RescalableShape
 {
 
     private final Color color;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private float scale;
     private final int SCALE = 100;
 
@@ -28,7 +26,7 @@ public class CarShape implements RescalableShape, MovableShape
      * @param x     the left of the bounding rectangle
      * @param y     the top of the bounding rectangle
      * @param scale the width of the bounding rectangle
-     * @param color
+     * @param color the color of the car
      */
     public CarShape(int x, int y, float scale, Color color)
     {
@@ -36,14 +34,6 @@ public class CarShape implements RescalableShape, MovableShape
         this.y = y;
         this.scale = scale;
         this.color = color;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
     }
 
     @Override
@@ -77,15 +67,5 @@ public class CarShape implements RescalableShape, MovableShape
     @Override
     public void rescale(float scale) {
         this.scale = scale;
-    }
-
-    @Override
-    public float getScale() {
-        return scale;
-    }
-
-    @Override
-    public void move() {
-        x++;
     }
 }

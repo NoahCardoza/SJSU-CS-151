@@ -5,15 +5,31 @@ import java.awt.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * An icon that paints a clock face based
+ * on an instance of GregorianCalendar
+ */
 public class ClockIcon implements Icon {
-    private int size;
+    private final int size;
     private GregorianCalendar calendar;
 
+    /**
+     * Constructs a ClockIcon
+     * @param size the size to draw the icon
+     */
     ClockIcon(int size) {
         this.size = size;
         this.calendar = new GregorianCalendar();
     }
 
+    /**
+     * Updated the calendar the instance uses to
+     * draw the clock from
+     * @param calendar a new GregorianCalendar instance
+     */
+    public void setCalendar(GregorianCalendar calendar) {
+        this.calendar = calendar;
+    }
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
         Graphics2D g2d = (Graphics2D)g;
@@ -57,9 +73,5 @@ public class ClockIcon implements Icon {
     @Override
     public int getIconHeight() {
         return size;
-    }
-
-    public void setCalendar(GregorianCalendar calendar) {
-        this.calendar = calendar;
     }
 }

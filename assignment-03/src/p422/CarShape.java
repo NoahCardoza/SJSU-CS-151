@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 /**
  A car that can be moved around.
 
- @author Textbook
+ @author Textbook, modified by Noah Cadoza
  */
 public class CarShape implements MovableShape
 {

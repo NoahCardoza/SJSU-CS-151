@@ -7,9 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.GregorianCalendar;
 
-public class ClockFrame extends JFrame {
+/**
+ * An extended JFrame component that displays
+ * a simple clock face.
+ */
 
-    static String calendarToString(GregorianCalendar calendar) {
+public class ClockFrame extends JFrame {
+    private static String calendarToString(GregorianCalendar calendar) {
         return String.format(
                 "%02d:%02d:%02d",
                 calendar.get(GregorianCalendar.HOUR_OF_DAY),
@@ -17,7 +21,11 @@ public class ClockFrame extends JFrame {
                 calendar.get(GregorianCalendar.SECOND)
         );
     }
-    ClockFrame() {
+
+    /**
+     * Constructs a ClockFrame instance
+     */
+    public ClockFrame() {
         super("Clock");
 
         GregorianCalendar calendar = new GregorianCalendar();

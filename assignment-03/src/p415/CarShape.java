@@ -7,9 +7,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- A car that can be moved around.
+ A car that can be resized around.
 
- @author Textbook
+ @author Textbook, modified by Noah Cadoza
  */
 public class CarShape implements RescalableShape
 {
@@ -26,7 +26,7 @@ public class CarShape implements RescalableShape
      * @param x     the left of the bounding rectangle
      * @param y     the top of the bounding rectangle
      * @param scale the width of the bounding rectangle
-     * @param color
+     * @param color the color of the car
      */
     public CarShape(int x, int y, float scale, Color color)
     {
