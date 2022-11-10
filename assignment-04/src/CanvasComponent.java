@@ -55,6 +55,7 @@ public class CanvasComponent extends JComponent {
     {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         for (CompositeShape s : shapes)
         {
             s.draw(g2);
