@@ -1,5 +1,6 @@
 package gui.controller;
 
+import calender.DateInterval;
 import calender.Event;
 import calender.MyCalender;
 import calender.TimeInterval;
@@ -16,31 +17,42 @@ import java.time.format.DateTimeParseException;
 public class NewEventController {
     public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     public static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-    private final MyCalender calender;
-    private final NewEventWindow window;
-    private final NewEventModel newEventModel;
-    private final MainModel mainModel;
 
     public NewEventController(MyCalender calender, NewEventWindow window, NewEventModel newEventModel, MainModel mainModel) {
-        this.calender = calender;
-        this.window = window;
-        this.newEventModel = newEventModel;
-        this.mainModel = mainModel;
-    }
+        window.getNewEventView().addEventTypeComboBoxActionListener((event) -> {
+            newEventModel.setEventType(NewEventModel.eventTypeOptionsToEnumValues.get(((JComboBox<?>) event.getSource()).getSelectedIndex()));
+        });
 
-    private void addEventListeners() {
-        window.getNewEventView().getSaveButton().addActionListener(e -> {
-
+        window.getNewEventView().addSaveButtonActionListener(e -> {
             try {
-                LocalDate day = LocalDate.parse(window.getNewEventView().getDateTextField().getText(), dateFormat);
-                Event event = new Event(
-                        window.getNewEventView().getNameTextField().getText(),
+                LocalDate day = LocalDate.parse(window.getNewEventView().getStartDate(), dateFormat);
+                Event event;
+
+                if (newEventModel.getEventType() == NewEventModel.EventType.ONE_TIME) {
+                    event = new Event(
+                        window.getNewEventView().getEventName(),
                         day,
                         new TimeInterval(
-                                LocalTime.parse(window.getNewEventView().getStartTimeTextField().getText(), timeFormat),
-                                LocalTime.parse(window.getNewEventView().getEndTimeTextField().getText(), timeFormat)
+                                LocalTime.parse(window.getNewEventView().getStartTime(), timeFormat),
+                                LocalTime.parse(window.getNewEventView().getEndTime(), timeFormat)
                         )
-                );
+                    );
+                } else {
+                    int repeatedDays = 0;
+                    for (int bitIndex : window.getNewEventView().getSelectedDays()) {
+                        repeatedDays |= 1 << bitIndex;
+                    }
+
+                    event = new Event(
+                            window.getNewEventView().getEventName(),
+                            new DateInterval(day, LocalDate.parse(window.getNewEventView().getEndDate(), dateFormat)),
+                            repeatedDays,
+                            new TimeInterval(
+                                    LocalTime.parse(window.getNewEventView().getStartTime(), timeFormat),
+                                    LocalTime.parse(window.getNewEventView().getEndTime(), timeFormat)
+                            )
+                    );
+                }
 
                 if (!calender.checkConflict(event)) {
                     calender.addEvent(event);
@@ -63,14 +75,5 @@ public class NewEventController {
                 );
             }
         });
-    }
-
-    public void setup() {
-        addEventListeners();
-
-        window.getNewEventView().getNameTextField().setText(newEventModel.getName());
-        window.getNewEventView().getDateTextField().setText(newEventModel.getDate());
-        window.getNewEventView().getStartTimeTextField().setText(newEventModel.getStartTime());
-        window.getNewEventView().getEndTimeTextField().setText(newEventModel.getEndTime());
     }
 }

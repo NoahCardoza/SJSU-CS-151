@@ -69,7 +69,7 @@ public class Event {
      * @param repeatedDays the days of the week the event repeats on
      * @param timeInterval the time of day the event spans
      */
-    Event(String name, DateInterval dateInterval, int repeatedDays, TimeInterval timeInterval) {
+    public Event(String name, DateInterval dateInterval, int repeatedDays, TimeInterval timeInterval) {
         this.recurring = true;
         this.name = name;
         this.repeatedDays = repeatedDays;

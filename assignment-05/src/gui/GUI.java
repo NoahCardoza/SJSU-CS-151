@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.YearMonth;
 
 /**
  * Contains all the methods needed to interact with the stdin/out.
@@ -34,8 +36,9 @@ public class GUI {
             System.out.println("Error: events.txt could not be found.");
         }
 
-        mainWindow = new MainWindow();
-        MainModel mainModel = new MainModel("", "", null, null);
+        MainModel mainModel = new MainModel(calender, "", "", YearMonth.now(), LocalDate.now());
+        mainWindow = new MainWindow(mainModel);
+
 
         MainController mainController = new MainController(calender, mainWindow, mainModel);
         mainController.setup();

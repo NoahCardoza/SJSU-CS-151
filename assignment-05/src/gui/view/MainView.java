@@ -1,5 +1,6 @@
 package gui.view;
 
+import gui.model.MainModel;
 import gui.view.component.DayView;
 import gui.view.component.MonthView;
 
@@ -18,10 +19,12 @@ public class MainView extends JFrame {
     private final JButton lastMonthButton;
     private final JButton todayButton;
     private final JButton nextMonthButton;
-    public MainView() {
+    public MainView(MainModel mainModel) {
         super();
 
-        monthView = new MonthView();
+        setTitle("Calendar");
+
+        monthView = new MonthView(mainModel);
         dayView = new DayView();
         dayView.setPreferredSize(new Dimension(500, 300));
 
@@ -30,20 +33,11 @@ public class MainView extends JFrame {
         createEventButton = new JButton("Create");
         quitButton = new JButton("Quit");
 
-        lastMonthButton = new BasicArrowButton(BasicArrowButton.WEST); // new JButton("<");
-//        lastMonthButton = new JButton("‹");
+        lastMonthButton = new BasicArrowButton(BasicArrowButton.WEST);
 
-//        Font buttonFont = lastMonthButton.getFont();
-//        Font nextPrevFont = new Font(buttonFont.getName(), buttonFont.getStyle(), 22);
-//        lastMonthButton.setFont(nextPrevFont);
-//        lastMonthButton.setPreferredSize(new Dimension(20, 20));
         todayButton = new JButton("Today");
-        nextMonthButton = new BasicArrowButton(BasicArrowButton.EAST);//new JButton(">");
-//        nextMonthButton = new JButton("›");
-//        nextMonthButton.setPreferredSize(new Dimension(20, 20));
-//        nextMonthButton.setFont(nextPrevFont);
+        nextMonthButton = new BasicArrowButton(BasicArrowButton.EAST);
 
-        setTitle("Calendar");
         setLayout(new BorderLayout());
 
         JPanel aside = new JPanel(new BorderLayout());

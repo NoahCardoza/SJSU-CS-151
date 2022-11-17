@@ -7,6 +7,8 @@ import gui.window.MainWindow;
 import gui.window.NewEventWindow;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
@@ -26,10 +28,20 @@ public class MainController {
     private void addEventListeners() {
         // create event buttons
         mainWindow.getMainView().getCreateEventButton().addActionListener(event -> {
-            NewEventModel model = new NewEventModel("Test", mainModel.getCurrentDay().format(NewEventController.dateFormat), "12:00", "14:00");
-            NewEventWindow window = new NewEventWindow();
-            NewEventController controller = new NewEventController(calender, window, model, mainModel);
-            controller.setup();
+            LocalTime now = LocalTime.now();
+            LocalTime nextHour = now
+                    .plusMinutes(60 - now.getMinute())
+                    .plusHours(1);
+            NewEventModel newEventModel = new NewEventModel(
+                    "",
+                    mainModel.getCurrentDay().format(NewEventController.dateFormat),
+                    mainModel.getCurrentDay().plusMonths(1).format(NewEventController.dateFormat),
+                    nextHour.format(NewEventController.timeFormat),
+                    nextHour.plusHours(1).format(NewEventController.timeFormat),
+                    NewEventModel.EventType.ONE_TIME
+            );
+            NewEventWindow window = new NewEventWindow(newEventModel);
+            new NewEventController(calender, window, newEventModel, mainModel);
         });
 
         // month navigation buttons
@@ -69,8 +81,7 @@ public class MainController {
         addChangeListeners();
         addEventListeners();
 
-        MonthViewController monthViewController = new MonthViewController(calender, mainModel, mainWindow.getMainView().getMonthView().getDayButtons(), mainWindow);
-        monthViewController.setup();
+        MonthViewController monthViewController = new MonthViewController(mainModel, mainWindow);
 
         DayViewController dayViewController = new DayViewController(calender, mainModel, mainWindow);
         dayViewController.setup();
