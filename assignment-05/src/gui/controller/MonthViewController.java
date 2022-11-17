@@ -10,16 +10,15 @@ import java.util.ArrayList;
 public class MonthViewController {
     public MonthViewController(MainModel mainModel, MainWindow mainWindow) {
         ArrayList<DayButton> dayButtons = mainWindow.getMainView().getMonthView().getDayButtons();
-        int firstDayOfMonthWeekOffset = mainModel.getFirstDayOfCurrentMonthWeekOffset();
 
         for (int i = 0; i < dayButtons.size(); i++) {
-            int index = i;
+            int index = i + 1;
             dayButtons.get(i).addActionListener(event -> {
                 mainModel.setCurrentDay(
                         LocalDate.of(
                                 mainModel.getCurrentMonth().getYear(),
                                 mainModel.getCurrentMonth().getMonth(),
-                                index - firstDayOfMonthWeekOffset + 1
+                                index - mainModel.getFirstDayOfCurrentMonthWeekOffset()
                         )
                 );
             });

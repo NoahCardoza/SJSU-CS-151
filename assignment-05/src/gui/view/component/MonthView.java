@@ -76,11 +76,11 @@ public class MonthView extends JPanel {
                 dayButtons.get(i).setVisible(false);
             }
 
-            if (day.getMonth().getValue() == month.getMonthValue()) {
+            if (day.getMonth().getValue() == month.getMonthValue() && day.getYear() == month.getYear()) {
                 dayButtons.get(day.getDayOfMonth() + firstDayOfMonthWeekOffset - 1).setSelected(true);
             }
 
-            if (today.getMonthValue() == month.getMonthValue()) {
+            if (today.getMonthValue() == month.getMonthValue() && today.getYear() == month.getYear()) {
                 dayButtons.get(today.getDayOfMonth() + firstDayOfMonthWeekOffset - 1).setToday(true);
             }
 
