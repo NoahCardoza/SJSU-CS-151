@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DayButtonIcon implements Icon {
-    private int size;
+    private final int size;
     private String text;
 
     private boolean hasEvents;
@@ -77,14 +77,6 @@ public class DayButtonIcon implements Icon {
     @Override
     public int getIconHeight() {
         return size;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 
     public String getText() {

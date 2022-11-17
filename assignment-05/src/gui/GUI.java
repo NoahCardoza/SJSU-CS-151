@@ -1,9 +1,11 @@
-package gui; /**
+/**
  * @author Noah Cardoza
  * @version 0.0.1
  * @date 09/12/2022
  * @assignment My First Calendar
  */
+
+package gui;
 
 import calender.MyCalender;
 import gui.controller.MainController;

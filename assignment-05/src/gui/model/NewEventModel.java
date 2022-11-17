@@ -13,8 +13,8 @@ public class NewEventModel extends BaseModel {
 
     public enum EventType { ONE_TIME, RECURRING }
 
-    public static List<String> eventTypeOptions = List.of(new String[]{"One-time", "Recurring"});
-    public static List<EventType> eventTypeOptionsToEnumValues = List.of(new EventType[]{EventType.ONE_TIME, EventType.RECURRING});
+    public static final List<String> eventTypeOptions = List.of(new String[]{"One-time", "Recurring"});
+    public static final List<EventType> eventTypeOptionsToEnumValues = List.of(new EventType[]{EventType.ONE_TIME, EventType.RECURRING});
 
     public NewEventModel(String name, String startDate, String endDate, String startTime, String endTime, EventType eventType) {
         this.name = name;

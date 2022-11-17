@@ -7,11 +7,11 @@ import gui.window.MainWindow;
 import gui.window.NewEventWindow;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
+@SuppressWarnings("InstantiationOfUtilityClass")
 public class MainController {
     private static final DateTimeFormatter monthFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
     private static final DateTimeFormatter dayFormat = DateTimeFormatter.ofPattern("EE MM/dd/yyyy");
@@ -44,11 +44,17 @@ public class MainController {
             new NewEventController(calender, window, newEventModel, mainModel);
         });
 
+        // on today button clicked
+        mainWindow.getMainView().addTodayButtonActionListener(event -> {
+            mainModel.setCurrentDay(LocalDate.now());
+        });
+
         // month navigation buttons
         mainWindow.getMainView().getLastMonthButton().addActionListener(event -> {
             mainModel.setCurrentMonth(mainModel.getCurrentMonth().minusMonths(1));
         });
 
+        // on next month button clicked
         mainWindow.getMainView().getNextMonthButton().addActionListener(event -> {
             mainModel.setCurrentMonth(mainModel.getCurrentMonth().plusMonths(1));
         });
@@ -81,10 +87,8 @@ public class MainController {
         addChangeListeners();
         addEventListeners();
 
-        MonthViewController monthViewController = new MonthViewController(mainModel, mainWindow);
-
-        DayViewController dayViewController = new DayViewController(calender, mainModel, mainWindow);
-        dayViewController.setup();
+        new MonthViewController(mainModel, mainWindow);
+        new DayViewController(calender, mainModel, mainWindow);
 
         LocalDate today = LocalDate.now();
         mainModel.setCurrentDay(today);

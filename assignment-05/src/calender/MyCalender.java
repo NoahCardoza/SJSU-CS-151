@@ -1,9 +1,11 @@
-package calender; /**
+/**
  * @author Noah Cardoza
  * @version 0.0.1
  * @date 09/12/2022
  * @assignment My First Calendar
  */
+
+package calender;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -130,7 +132,7 @@ public class MyCalender {
      * Deserialize a set of events from a file.
      *
      * @param file the file to read from
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if the file is not found
      *
      * @pre the file must exist in the file system and be of valid format or an exception will be thrown
      * @post the events will be loaded into the calendar

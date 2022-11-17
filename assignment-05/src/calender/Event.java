@@ -1,9 +1,11 @@
-package calender; /**
+/**
  * @author Noah Cardoza
  * @version 0.0.1
  * @date 09/12/2022
  * @assignment My First Calendar
  */
+
+package calender;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -95,13 +97,13 @@ public class Event {
 
     /**
      * Deserialized an event from a scanner object.
-     *
+     * <p>
      * --- calender.Event format specs --------------------------
      * [O|R (one-time|recurring)]:[name (with spaces)]$
      * [SMTWRFA (days to repeat on)] [MM/dd/yyyy (start date)] [MM/dd/yyyy (end date)] [HH:mm (start time)] [HH:mm (end time)]$
-     *
+     * <p>
      * E.G.
-     *
+     * <p>
      * R:CS151 Lecture$
      * TR 08/23/2022 12/06/2022 10:30 11:45$
      * -------------------------------------------------

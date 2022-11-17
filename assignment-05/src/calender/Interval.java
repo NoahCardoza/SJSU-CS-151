@@ -1,11 +1,11 @@
-package calender;
-
 /**
  * @author Noah Cardoza
  * @version 0.0.1
  * @date 09/12/2022
  * @assignment My First Calendar
  */
+
+package calender;
 
 public abstract class Interval<T extends Comparable<? super T>> {
     // TODO: should these get java docs?
@@ -36,17 +36,17 @@ public abstract class Interval<T extends Comparable<? super T>> {
     /**
      * Determines if two intervals of the same type overlap.
      * The comparison is not inclusive.
-     *
+     * <p>
      * E.G. an event ends at
      * 1400 and the next event starts at 1400, they are not
      * considered overlapping.
-     *
+     * <p>
      * TODO: verify that non inclusive checks correctly identify overlapping
      *       recurring events when the end date is the other events start date
      *
      * @param interval the interval to compare with
      *
-     * @return
+     * @return whether an overlap occurs
      */
     public boolean overlaps(Interval<T> interval) {
         int startStart = this.getStart().compareTo(interval.getStart());

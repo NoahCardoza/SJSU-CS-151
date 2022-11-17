@@ -9,7 +9,6 @@ public class DayView extends JPanel {
     private final JButton lastDayButton;
     private final JButton nextDayButton;
     private final JLabel headerLabel;
-    private final JScrollPane scrollPane;
     private final DayViewEventsCanvas dayViewEventsCanvas;
     public DayView() {
         super();
@@ -35,7 +34,7 @@ public class DayView extends JPanel {
 
 
         add(panel, BorderLayout.NORTH);
-        scrollPane = new JScrollPane(dayViewEventsCanvas);
+        JScrollPane scrollPane = new JScrollPane(dayViewEventsCanvas);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         add(scrollPane, BorderLayout.CENTER);
     }
@@ -54,9 +53,5 @@ public class DayView extends JPanel {
 
     public JButton getNextDayButton() {
         return nextDayButton;
-    }
-
-    public JScrollPane getScrollPane() {
-        return scrollPane;
     }
 }

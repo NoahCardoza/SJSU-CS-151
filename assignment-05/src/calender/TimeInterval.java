@@ -1,9 +1,11 @@
-package calender; /**
+/**
  * @author Noah Cardoza
  * @version 0.0.1
  * @date 09/12/2022
  * @assignment My First Calendar
  */
+
+package calender;
 
 import java.time.LocalTime;
 import java.util.Scanner;

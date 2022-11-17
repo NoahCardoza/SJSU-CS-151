@@ -74,9 +74,9 @@ public class DayViewEventsCanvas extends JComponent {
 
     /**
      * <a href="https://stackoverflow.com/a/66041121/6169961">StackOverflow</a>
-     * @param g
-     * @param text
-     * @param rect
+     * @param g the graphics object to draw to
+     * @param text the text to draw
+     * @param rect the rectangle to keep the text inside
      */
     static void drawWrappedText(Graphics g, String text, Rectangle rect) {
         JTextArea ta = new JTextArea(text);
@@ -126,10 +126,6 @@ public class DayViewEventsCanvas extends JComponent {
         rect.height += ROW_HEIGHT;
 
         scrollRectToVisible(rect);
-    }
-
-    public ArrayList<Event> getEvents() {
-        return events;
     }
 
     public void setEvents(ArrayList<Event> events) {

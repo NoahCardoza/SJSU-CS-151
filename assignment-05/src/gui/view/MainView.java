@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 public class MainView extends JFrame {
@@ -55,6 +56,8 @@ public class MainView extends JFrame {
         add(aside, BorderLayout.LINE_START);
         add(dayView, BorderLayout.CENTER);
 
+        // TODO: ask: is this an "ok" place for this listener
+        // manually trigger close event when the quit button is clicked
         quitButton.addActionListener(event -> {
             processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         });
@@ -62,10 +65,6 @@ public class MainView extends JFrame {
 
     public DayView getDayView() {
         return dayView;
-    }
-
-    public JButton getQuitButton() {
-        return quitButton;
     }
 
     public MonthView getMonthView() {
@@ -84,7 +83,7 @@ public class MainView extends JFrame {
         return nextMonthButton;
     }
 
-    public JButton getTodayButton() {
-        return todayButton;
+    public void addTodayButtonActionListener(ActionListener listener) {
+        todayButton.addActionListener(listener);
     }
 }
