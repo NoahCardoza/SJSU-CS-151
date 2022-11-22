@@ -14,11 +14,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class NewEventController {
+public class NewEventViewController {
     public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     public static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 
-    public NewEventController(MyCalender calender, NewEventWindow window, NewEventModel newEventModel, MainModel mainModel) {
+    public NewEventViewController(MyCalender calender, NewEventWindow window, NewEventModel newEventModel, MainModel mainModel) {
         window.getNewEventView().addEventTypeComboBoxActionListener((event) -> {
             newEventModel.setEventType(NewEventModel.eventTypeOptionsToEnumValues.get(((JComboBox<?>) event.getSource()).getSelectedIndex()));
         });
@@ -55,9 +55,8 @@ public class NewEventController {
                 }
 
                 if (!calender.checkConflict(event)) {
-                    calender.addEvent(event);
                     window.getNewEventView().dispose();
-                    mainModel.setCurrentDay(day);
+                    mainModel.addCalendarEvent(event);
                 } else {
                     JOptionPane.showMessageDialog(
                             window.getNewEventView(),

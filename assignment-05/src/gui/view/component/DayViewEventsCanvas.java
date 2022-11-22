@@ -1,6 +1,7 @@
 package gui.view.component;
 
 import calender.Event;
+import gui.model.MainModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,12 +14,22 @@ public class DayViewEventsCanvas extends JComponent {
     private ArrayList<Event> events;
     private int maxHourHeadingWidth;
 
-    public DayViewEventsCanvas() {
+    public DayViewEventsCanvas(MainModel mainModel) {
         super();
 
         setPreferredSize(new Dimension(0, ROWS * ROW_HEIGHT + 1));
 
         this.events = new ArrayList<>();
+        mainModel.addEventListener("update:currentDay", e -> {
+            ArrayList<Event> events = mainModel.getAllEventsOnCurrentDay();
+
+            setEvents(events);
+
+            if (events.size() > 0) {
+                scrollToEvent(events.get(0));
+            }
+        });
+
     }
 
     @Override
@@ -37,7 +48,6 @@ public class DayViewEventsCanvas extends JComponent {
         int fontHeight = getFontMetrics(getFont()).getHeight();
         // TODO: move this somewhere else without causing a null ptr exception
         this.maxHourHeadingWidth = calculateMaxHourHeadingWidth();
-
 
         for (int i = 0; i < ROWS; i++) {
             int height = i * ROW_HEIGHT;
@@ -122,9 +132,13 @@ public class DayViewEventsCanvas extends JComponent {
     public void scrollToEvent(Event event) {
         Rectangle rect = rectFromEvent(event);
 
-        rect.y -= ROW_HEIGHT;
-        rect.height += ROW_HEIGHT;
+        rect.y -= ROW_HEIGHT / 2;
+        rect.height += getHeight();
 
+        // scroll to the top first
+        scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+
+        // scroll from the top to the rect
         scrollRectToVisible(rect);
     }
 

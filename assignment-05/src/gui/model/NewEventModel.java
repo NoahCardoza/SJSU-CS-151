@@ -71,6 +71,6 @@ public class NewEventModel extends BaseModel {
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
-        dispatchEvent("update:eventType");
+        emit("update:eventType");
     }
 }

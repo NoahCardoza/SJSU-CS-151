@@ -1,5 +1,7 @@
 package gui.view.component;
 
+import gui.model.MainModel;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
@@ -10,15 +12,18 @@ public class DayView extends JPanel {
     private final JButton nextDayButton;
     private final JLabel headerLabel;
     private final DayViewEventsCanvas dayViewEventsCanvas;
-    public DayView() {
+    public DayView(MainModel mainModel) {
         super();
 
         lastDayButton = new BasicArrowButton(BasicArrowButton.WEST);//new JButton("<");
         nextDayButton = new BasicArrowButton(BasicArrowButton.EAST);//JButton(">");
 
         headerLabel = new JLabel();
+        mainModel.addEventListener("update:currentDay", event -> {
+            headerLabel.setText(mainModel.getDayViewTitle());
+        });
 
-        dayViewEventsCanvas = new DayViewEventsCanvas();
+        dayViewEventsCanvas = new DayViewEventsCanvas(mainModel);
 
         setLayout(new BorderLayout());
 
@@ -37,14 +42,6 @@ public class DayView extends JPanel {
         JScrollPane scrollPane = new JScrollPane(dayViewEventsCanvas);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         add(scrollPane, BorderLayout.CENTER);
-    }
-
-    public JLabel getHeaderLabel() {
-        return headerLabel;
-    }
-
-    public DayViewEventsCanvas getDayViewEventsCanvas() {
-        return dayViewEventsCanvas;
     }
 
     public JButton getLastDayButton() {

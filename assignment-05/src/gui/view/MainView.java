@@ -15,7 +15,6 @@ public class MainView extends JFrame {
     private final DayView dayView;
     private final MonthView monthView;
 
-    private final JButton quitButton;
     private final JButton createEventButton;
     private final JButton lastMonthButton;
     private final JButton todayButton;
@@ -26,13 +25,13 @@ public class MainView extends JFrame {
         setTitle("Calendar");
 
         monthView = new MonthView(mainModel);
-        dayView = new DayView();
+        dayView = new DayView(mainModel);
         dayView.setPreferredSize(new Dimension(500, 300));
 
         dayView.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         createEventButton = new JButton("Create");
-        quitButton = new JButton("Quit");
+        JButton quitButton = new JButton("Quit");
 
         lastMonthButton = new BasicArrowButton(BasicArrowButton.WEST);
 

@@ -8,7 +8,9 @@
 package gui;
 
 import calender.MyCalender;
-import gui.controller.MainController;
+import gui.controller.DayViewController;
+import gui.controller.MainViewController;
+import gui.controller.MonthViewController;
 import gui.model.MainModel;
 import gui.window.MainWindow;
 
@@ -42,8 +44,9 @@ public class GUI {
         mainWindow = new MainWindow(mainModel);
 
 
-        MainController mainController = new MainController(calender, mainWindow, mainModel);
-        mainController.setup();
+        new MainViewController(calender, mainWindow, mainModel).setup();
+        new MonthViewController(mainModel, mainWindow);
+        new DayViewController(calender, mainModel, mainWindow);
 
         mainWindow.getMainView().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainWindow.getMainView().addWindowListener(new WindowAdapter() {
@@ -52,7 +55,6 @@ public class GUI {
                 onClose();
             }
         });
-
     }
 
     private void onClose() {

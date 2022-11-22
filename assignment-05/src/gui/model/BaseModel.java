@@ -18,11 +18,11 @@ public abstract class BaseModel {
     public void addEventListener(String event, ChangeListener listener, boolean immediate) {
         addEventListener(event, listener);
         if (immediate) {
-            dispatchEvent(event);
+            emit(event);
         }
     }
 
-    protected void dispatchEvent (String event) {
+    protected void emit(String event) {
         this.eventManager.dispatch(event);
     }
 }
