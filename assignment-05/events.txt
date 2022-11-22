@@ -12,6 +12,8 @@ O:Pickup Izzy at SFO
 09/17/2022 09:00 09:30
 O:Novo Amor Concert (The Fillmore)
 09/17/2022 20:00 22:00
+O:Review open-source PRs
+06/12/2024 09:00 10:00
 R:CS 146: Lecture
 MW 08/22/2022 12/07/2022 13:30 14:45
 R:IES 130: Lecture
@@ -22,3 +24,5 @@ R:CMPE 120: Lecture
 TR 08/23/2022 12/06/2022 15:00 16:15
 R:CMPE 131: Lecture
 R 08/23/2022 12/06/2022 18:00 20:45
+R:Feed Turtles
+SMTWRFA 06/10/2024 07/01/2024 08:00 08:45
