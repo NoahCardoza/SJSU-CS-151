@@ -1,2 +1,9 @@
 .DS_Store
-.idea
+tmp/
+**/submission/
+**/hw*/
+**/diagram.mdj
+**/diagram.png
+**/*.zip
+**/.idea
+**/out
