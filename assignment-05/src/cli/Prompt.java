@@ -24,7 +24,7 @@ public class Prompt {
     private final Scanner scanner;
 
     /**
-     * Constructs a cli.Prompt instance.
+     * Constructs a Prompt instance.
      *
      * @param scanner the scanner to read input from
      */

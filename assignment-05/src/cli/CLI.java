@@ -30,7 +30,7 @@ public class CLI {
     private final Prompt prompt;
 
     /**
-     * Constructs a new cli.CLI instance.
+     * Constructs a new CLI instance.
      * @param scanner the scanner to read user input from.
      */
     public CLI(Scanner scanner) {
@@ -73,7 +73,7 @@ public class CLI {
     }
 
     /**
-     * Executes the main cli.CLI loop. Handles loading the events.txt
+     * Executes the main CLI loop. Handles loading the events.txt
      * and serializing the data to output.txt after the program is
      * quit.
      */
