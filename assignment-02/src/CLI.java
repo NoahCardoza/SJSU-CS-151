@@ -33,7 +33,7 @@ public class CLI {
      * Executes the main CLI loop.
      */
     public void mainLoop() {
-        while(screenMainMenu());
+        while (screenMainMenu());
     }
 
     /**
@@ -58,11 +58,7 @@ public class CLI {
             case 'M' -> screenPrintManifest();
         }
 
-        if (choice == 'Q') {
-            return false;
-        }
-
-        return true;
+        return choice != 'Q';
     }
 
     private void screenAddGroup() {boolean isFirstClass;

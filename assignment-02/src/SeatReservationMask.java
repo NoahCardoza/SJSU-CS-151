@@ -10,9 +10,9 @@
  * largest group of seats when seating a group.
  */
 public class SeatReservationMask {
-    private byte mask;
-    private int size;
-    private int row;
+    private final byte mask;
+    private final int size;
+    private final int row;
 
     /**
      * Constructs a new SeatReservationMask instance.

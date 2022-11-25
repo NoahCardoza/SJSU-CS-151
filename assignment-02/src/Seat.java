@@ -71,7 +71,7 @@ public class Seat {
      * @return a new Seat instance
      */
     public static Seat parse(String line) {
-        return new Seat((int) line.charAt(0), line.charAt(1), line.substring(2));
+        return new Seat(line.charAt(0), line.charAt(1), line.substring(2));
     }
 
     /**
@@ -80,12 +80,8 @@ public class Seat {
      * @return A string representation of the Seat instance
      */
     public String serialize() {
-        StringBuilder builder = new StringBuilder();
-        builder.append((char) row);
-        builder.append(seat);
-        builder.append(name);
-
-        return builder.toString();
+        // cast to char so the number doesn't literally get written as a string
+        return String.valueOf((char) row) + seat + name;
     }
 
     @Override

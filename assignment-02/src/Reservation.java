@@ -161,20 +161,21 @@ public class Reservation {
             reservation.firstClass = true;
         }
 
-        size |= (line.charAt(1) << 8);
-        size |= (line.charAt(2));
 
-        line = line.substring(3);
-        if (size == 1) {
-            Seat seat = Seat.parse(line);
-            reservation.name = seat.getName();
-            reservation.seats.add(seat);
-        } else {
+        if (reservation.group) {
+            size |= (line.charAt(1) << 8);
+            size |= (line.charAt(2));
+            line = line.substring(3);
             reservation.name = line;
             for (int i = 0; i < size; i++) {
                 line = scanner.nextLine();
                 reservation.seats.add(Seat.parse(line));
             }
+        } else {
+            line = line.substring(1);
+            Seat seat = Seat.parse(line);
+            reservation.name = seat.getName();
+            reservation.seats.add(seat);
         }
 
 
@@ -188,7 +189,9 @@ public class Reservation {
      */
     public String serialize() {
         StringBuilder builder = new StringBuilder();
+
         char magicNumber = 0;
+
         if (group) {
             magicNumber |= 0b01;
         }
@@ -198,17 +201,14 @@ public class Reservation {
 
         builder.append(magicNumber);
 
-        int numberOfPeople = seats.size();
-        ByteBuffer sizeBytes = ByteBuffer.allocate(2)
-                .put((byte)((numberOfPeople >> 8) & 0xFF))
-                .put((byte)(numberOfPeople & 0xFF));
-
-        builder.append(new String(sizeBytes.array()));
-
         // save space when there is only one person in the reservation
-        if (numberOfPeople == 1) {
-            builder.append(seats.get(0).serialize());
-        } else {
+        if (group) {
+            int numberOfPeople = seats.size();
+            ByteBuffer sizeBytes = ByteBuffer.allocate(2)
+                    .put((byte)((numberOfPeople >> 8) & 0xFF))
+                    .put((byte)(numberOfPeople & 0xFF));
+
+            builder.append(new String(sizeBytes.array()));
             builder.append(name);
             StringJoiner joiner = new StringJoiner(System.lineSeparator());
             builder.append(System.lineSeparator());
@@ -216,6 +216,8 @@ public class Reservation {
                 joiner.add(seat.serialize());
             }
             builder.append(joiner);
+        } else {
+            builder.append(seats.get(0).serialize());
         }
 
         return builder.toString();

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class Manifest {
     private final byte numberFirstClassRows = 2;
-//  private byte numberEconomyClassRows = 30;
+    private byte numberEconomyClassRows = 30;
 
     private final byte numberFirstClassColumns = 4;
     private final byte numberEconomyClassColumns = 6;
@@ -57,9 +57,7 @@ public class Manifest {
         int rowOffset = reservation.isFirstClass() ? 0 : numberFirstClassRows;
 
         reservation.getSeatsStream().forEach(
-                seat -> {
-                    rows[seat.getRow() - rowOffset] &= columnToBitmaskInverted(seat.getSeat());
-                }
+                seat -> rows[seat.getRow() - rowOffset] &= columnToBitmaskInverted(seat.getSeat())
         );
 
         reservations.put(reservation.getName(), reservation);
@@ -419,9 +417,7 @@ public class Manifest {
         int rowOffset = reservation.isFirstClass() ? 0 : numberFirstClassRows;
 
         reservation.getSeatsStream().forEach(
-                seat -> {
-                    rows[seat.getRow() - rowOffset] |= columnToBitmask(seat.getSeat());
-                }
+                seat -> rows[seat.getRow() - rowOffset] |= columnToBitmask(seat.getSeat())
         );
 
         reservations.remove(reservation.getName());
@@ -469,9 +465,8 @@ public class Manifest {
         stringJoiner.add("Manifest:");
         stringJoiner.add("  Seats:");
         stringJoiner.add(
-                reservations.entrySet()
+                reservations.values()
                         .stream()
-                        .map(Map.Entry::getValue)
                         .flatMap(Reservation::getSeatsStream)
                         .sorted(
                                 Comparator.comparing(Seat::getRow)
@@ -553,9 +548,8 @@ public class Manifest {
     }
 
     private void serialize(PrintStream stream) {
-        stream.println(reservations.entrySet()
+        stream.println(reservations.values()
                 .stream()
-                .map(Map.Entry::getValue)
                 .map(Reservation::serialize)
                 .collect(Collectors.joining(System.lineSeparator())));
     }
