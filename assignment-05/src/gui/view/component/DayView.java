@@ -11,19 +11,19 @@ public class DayView extends JPanel {
     private final JButton lastDayButton;
     private final JButton nextDayButton;
     private final JLabel headerLabel;
-    private final DayViewEventsCanvas dayViewEventsCanvas;
+
     public DayView(MainModel mainModel) {
         super();
 
-        lastDayButton = new BasicArrowButton(BasicArrowButton.WEST);//new JButton("<");
-        nextDayButton = new BasicArrowButton(BasicArrowButton.EAST);//JButton(">");
+        lastDayButton = new BasicArrowButton(BasicArrowButton.WEST);
+        nextDayButton = new BasicArrowButton(BasicArrowButton.EAST);
 
         headerLabel = new JLabel();
-        mainModel.addEventListener("update:currentDay", event -> {
+        mainModel.addEventListener("update:currentDay", (event) -> {
             headerLabel.setText(mainModel.getDayViewTitle());
         });
 
-        dayViewEventsCanvas = new DayViewEventsCanvas(mainModel);
+        DayViewEventsCanvas dayViewEventsCanvas = new DayViewEventsCanvas(mainModel);
 
         setLayout(new BorderLayout());
 
