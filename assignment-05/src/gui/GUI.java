@@ -1,13 +1,13 @@
 /**
  * @author Noah Cardoza
  * @version 0.0.1
- * @date 09/12/2022
- * @assignment My First Calendar
+ * @date 11/08/2022
+ * @assignment Calendar GUI
  */
 
 package gui;
 
-import calender.MyCalender;
+import calendar.MyCalendar;
 import gui.controller.DayViewController;
 import gui.controller.MainViewController;
 import gui.controller.MonthViewController;
@@ -25,14 +25,17 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 
 /**
- * Contains all the methods needed to interact with the stdin/out.
+ * Sets up the GUI, creates the models, controllers, and views.
  */
 public class GUI {
-    private final MyCalender calender;
+    private final MyCalendar calendar;
     private final MainWindow mainWindow;
 
+    /**
+     * Creates a new instance.
+     */
     public GUI() {
-        calender = new MyCalender();
+        calendar = new MyCalendar();
 
         if (loadFromFile()) {
             System.out.println("Success: Events loaded from events.txt!");
@@ -40,13 +43,12 @@ public class GUI {
             System.out.println("Error: events.txt could not be found.");
         }
 
-        MainModel mainModel = new MainModel(calender, "", "", YearMonth.now(), LocalDate.now());
+        MainModel mainModel = new MainModel(calendar, YearMonth.now(), LocalDate.now());
         mainWindow = new MainWindow(mainModel);
 
-
-        new MainViewController(calender, mainWindow, mainModel).setup();
+        new MainViewController(mainWindow, mainModel);
         new MonthViewController(mainModel, mainWindow);
-        new DayViewController(calender, mainModel, mainWindow);
+        new DayViewController(mainModel, mainWindow);
 
         mainWindow.getMainView().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainWindow.getMainView().addWindowListener(new WindowAdapter() {
@@ -57,6 +59,9 @@ public class GUI {
         });
     }
 
+    /**
+     * Saves the calendar to a file when the window closes.
+     */
     private void onClose() {
         mainWindow.getMainView().dispose();
         dumpToFile();
@@ -71,7 +76,7 @@ public class GUI {
         File iFile = new File("events.txt");
 
         try {
-            calender.load(iFile);
+            calendar.load(iFile);
         } catch (FileNotFoundException e) {
             return false;
         }
@@ -87,7 +92,7 @@ public class GUI {
 
         try {
             oFile = new FileWriter("events.txt");
-            calender.dump(oFile);
+            calendar.dump(oFile);
             oFile.close();
         } catch (IOException e) {
             return false;

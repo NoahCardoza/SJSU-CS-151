@@ -5,7 +5,7 @@
  * @assignment My First Calendar
  */
 
-package calender;
+package calendar;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -98,7 +98,7 @@ public class Event {
     /**
      * Deserialized an event from a scanner object.
      * <p>
-     * --- calender.Event format specs --------------------------
+     * --- Event format specs --------------------------
      * [O|R (one-time|recurring)]:[name (with spaces)]$
      * [SMTWRFA (days to repeat on)] [MM/dd/yyyy (start date)] [MM/dd/yyyy (end date)] [HH:mm (start time)] [HH:mm (end time)]$
      * <p>

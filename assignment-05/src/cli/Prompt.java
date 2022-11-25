@@ -7,7 +7,7 @@
 
 package cli;
 
-import calender.TimeInterval;
+import calendar.TimeInterval;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;

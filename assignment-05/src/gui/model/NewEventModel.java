@@ -1,9 +1,18 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/10/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.model;
 
 import java.util.List;
 
+/**
+ * A data model to manage the state of the new event view.
+ */
 public class NewEventModel extends BaseModel {
-    // TODO: is this really needed since most of these are never update past the first render?
     private String name;
     private String startDate;
     private String endDate;
@@ -16,6 +25,16 @@ public class NewEventModel extends BaseModel {
     public static final List<String> eventTypeOptions = List.of(new String[]{"One-time", "Recurring"});
     public static final List<EventType> eventTypeOptionsToEnumValues = List.of(new EventType[]{EventType.ONE_TIME, EventType.RECURRING});
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param name the default name of the event
+     * @param startDate the default start date
+     * @param endDate the default end date (for a recurring event)
+     * @param startTime the default start time
+     * @param endTime the default end time
+     * @param eventType the event type to display
+     */
     public NewEventModel(String name, String startDate, String endDate, String startTime, String endTime, EventType eventType) {
         this.name = name;
         this.startDate = startDate;

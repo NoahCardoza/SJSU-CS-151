@@ -7,9 +7,9 @@
 
 package cli;
 
-import calender.Event;
-import calender.MyCalender;
-import calender.TimeInterval;
+import calendar.Event;
+import calendar.MyCalendar;
+import calendar.TimeInterval;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,7 +25,7 @@ import java.util.*;
  * Contains all the methods needed to interact with the stdin/out.
  */
 public class CLI {
-    private final MyCalender calender;
+    private final MyCalendar calendar;
     private final Scanner scanner;
     private final Prompt prompt;
 
@@ -36,7 +36,7 @@ public class CLI {
     public CLI(Scanner scanner) {
         this.scanner = scanner;
         prompt = new Prompt(scanner);
-        calender = new MyCalender();
+        calendar = new MyCalendar();
     }
 
     /**
@@ -47,7 +47,7 @@ public class CLI {
         File iFile = new File("events.txt");
 
         try {
-            calender.load(iFile);
+            calendar.load(iFile);
         } catch (FileNotFoundException e) {
             return false;
         }
@@ -63,7 +63,7 @@ public class CLI {
 
         try {
             oFile = new FileWriter("output.txt");
-            calender.dump(oFile);
+            calendar.dump(oFile);
             oFile.close();
         } catch (IOException e) {
             return false;
@@ -78,7 +78,7 @@ public class CLI {
      * quit.
      */
     public void mainLoop() {
-        calender.printTodayCalendar();
+        calendar.printTodayCalendar();
 
         if (loadFromFile()) {
             System.out.println("Success: Events loaded from events.txt!");
@@ -87,7 +87,7 @@ public class CLI {
             return;
         }
 
-        calender.printMonthView();
+        calendar.printMonthView();
 
         screenMainMenuLoop();
 
@@ -138,7 +138,7 @@ public class CLI {
 
         LocalDate day = LocalDate.now();
         while (choice != 'G') {
-            calender.printDayView(day);
+            calendar.printDayView(day);
             choice = prompt.choice("[P]revious or [N]ext or [G]o back to the main menu?", "PNG");
             if (choice == 'P') {
                 day = day.minusDays(1);
@@ -153,7 +153,7 @@ public class CLI {
 
         YearMonth month = YearMonth.now();
         while (choice != 'G') {
-            calender.printMonthView(month);
+            calendar.printMonthView(month);
             choice = prompt.choice("[P]revious or [N]ext or [G]o back to the main menu?", "PNG");
             if (choice == 'P') {
                 month = month.minusMonths(1);
@@ -179,7 +179,7 @@ public class CLI {
 
         Event event = new Event(name, date, timeInterval);
 
-        List<Event> conflicts = calender.findConflicts(event);
+        List<Event> conflicts = calendar.findConflicts(event);
 
         if (conflicts.size() >= 1) {
             System.out.println("Error: Cannot event as it conflicts with the following events:");
@@ -192,19 +192,19 @@ public class CLI {
                 );
             }
         } else {
-            calender.addEvent(event);
+            calendar.addEvent(event);
             System.out.println("Success: The new event has been added to the calendar.");
         }
     }
 
     private void screenGoTo() {
         LocalDate day = prompt.date("Enter a date to go to");
-        calender.printDayView(day);
+        calendar.printDayView(day);
     }
 
     private void screenEventList() {
         List<Event> oneTimeEvents =
-                calender.getEventsOneTime()
+                calendar.getEventsOneTime()
                         .stream()
                         .sorted(
                                 Comparator.comparing(Event::getStartDate)
@@ -254,7 +254,7 @@ public class CLI {
 
         // TODO: should this be contained by the MyCalendar
         System.out.println("┏ RECURRING EVENTS ▷");
-        calender
+        calendar
             .getEventsRecurring()
             .stream()
             .sorted(
@@ -284,36 +284,36 @@ public class CLI {
 
     private void screenDeleteInteractive() {
         LocalDate date = prompt.date("Enter a date to list the events on that day");
-        ArrayList<Event> events = calender.getOneTimeEventsOnDate(date);
+        ArrayList<Event> events = calendar.getOneTimeEventsOnDate(date);
 
         if (events.isEmpty()) {
             System.out.println("There are no one-time events scheduled that day.");
             return;
         }
 
-        calender.printDayView(date, events);
+        calendar.printDayView(date, events);
         int eventIndex = prompt.range("Choose an even to delete", 1, events.size()) - 1;
-        calender.removeEvent(events.get(eventIndex));
+        calendar.removeEvent(events.get(eventIndex));
         System.out.println("Success: The event was removed!");
     }
 
     private void screenDeleteAllOnDay() {
         LocalDate date = prompt.date("Enter a date to clear the events from");
-        ArrayList<Event> events = calender.getOneTimeEventsOnDate(date);
+        ArrayList<Event> events = calendar.getOneTimeEventsOnDate(date);
         for (Event event : events) {
-            calender.removeEvent(event);
+            calendar.removeEvent(event);
         }
         System.out.printf("Success: All the one-time events on %1$tm/%1$td/%1$tY removed!%n", date);
     }
 
     private void screenDeleteRecurringEvent() {
-        System.out.print("calender.Event name: ");
+        System.out.print("Event name: ");
         String name = scanner.nextLine();
 
-        Event event = calender.findRecurringEventByName(name);
+        Event event = calendar.findRecurringEventByName(name);
 
         if (event != null) {
-            calender.removeEvent(event);
+            calendar.removeEvent(event);
             System.out.println("Success: The recurring event was removed.");
         } else {
             System.out.println("Error: Could not find a recurring event matching that name. Please try again.");

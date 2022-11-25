@@ -1,19 +1,35 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/08/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.view.component;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The icon that is placed inside the <code>DayButton</code> class.
+ */
 public class DayButtonIcon implements Icon {
     private final int size;
     private String text;
-
     private boolean hasEvents;
     private boolean isToday;
     private boolean isSelected;
 
+    /**
+     * Constructs a new icon.
+     *
+     * @param text the text to write inside the icon
+     * @param size the size of the icon
+     */
     public DayButtonIcon(String text, int size) {
         this.text = text;
         this.size = size;
+
         hasEvents = false;
         isToday = false;
         isSelected = false;

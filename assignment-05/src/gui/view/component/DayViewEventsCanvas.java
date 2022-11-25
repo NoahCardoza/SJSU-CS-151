@@ -1,12 +1,24 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/08/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.view.component;
 
-import calender.Event;
+import calendar.Event;
 import gui.model.MainModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Displays the events on the current day in a scrollable list
+ * visibly showing how much time each event takes by its height
+ * and time in the day by placement in the scrollable frame.
+ */
 public class DayViewEventsCanvas extends JComponent {
     static final int ROW_HEIGHT = 80;
     static final int ROWS = 24;
@@ -14,6 +26,11 @@ public class DayViewEventsCanvas extends JComponent {
     private ArrayList<Event> events;
     private int maxHourHeadingWidth;
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param mainModel a reference to the main data model
+     */
     public DayViewEventsCanvas(MainModel mainModel) {
         super();
 
@@ -26,9 +43,11 @@ public class DayViewEventsCanvas extends JComponent {
             setEvents(events);
 
             if (events.size() > 0) {
-                scrollToEvent(events.get(0));
+                // make sure scrolling happens after the first render of the
+                // canvas happens and the size is initialized properly
+                SwingUtilities.invokeLater(() -> scrollToEvent(events.get(0)));
             }
-        });
+        }, true);
 
     }
 
@@ -38,7 +57,7 @@ public class DayViewEventsCanvas extends JComponent {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
@@ -88,7 +107,7 @@ public class DayViewEventsCanvas extends JComponent {
      * @param text the text to draw
      * @param rect the rectangle to keep the text inside
      */
-    static void drawWrappedText(Graphics g, String text, Rectangle rect) {
+    private static void drawWrappedText(Graphics g, String text, Rectangle rect) {
         JTextArea ta = new JTextArea(text);
         ta.setLineWrap(true);
         ta.setWrapStyleWord(true);
@@ -129,7 +148,13 @@ public class DayViewEventsCanvas extends JComponent {
         );
     }
 
-    public void scrollToEvent(Event event) {
+    /**
+     * Scrolls to the scrollable frame to bring the specified
+     * event into the frame.
+     *
+     * @param event the event to bring into frame
+     */
+    private void scrollToEvent(Event event) {
         Rectangle rect = rectFromEvent(event);
 
         rect.y -= ROW_HEIGHT / 2;
@@ -142,7 +167,7 @@ public class DayViewEventsCanvas extends JComponent {
         scrollRectToVisible(rect);
     }
 
-    public void setEvents(ArrayList<Event> events) {
+    private void setEvents(ArrayList<Event> events) {
         this.events = events;
         repaint();
     }

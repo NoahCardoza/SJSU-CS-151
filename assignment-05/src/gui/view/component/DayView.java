@@ -1,3 +1,10 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/08/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.view.component;
 
 import gui.model.MainModel;
@@ -6,12 +13,22 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
+/**
+ * The view portion that displays information about the
+ * events on the selected day.
+ */
 public class DayView extends JPanel {
     private final JButton lastDayButton;
     private final JButton nextDayButton;
     private final JLabel headerLabel;
 
+    /**
+     * Constructs a new day view.
+     *
+     * @param mainModel a reference to the main model
+     */
     public DayView(MainModel mainModel) {
         super();
 
@@ -21,7 +38,7 @@ public class DayView extends JPanel {
         headerLabel = new JLabel();
         mainModel.addEventListener("update:currentDay", (event) -> {
             headerLabel.setText(mainModel.getDayViewTitle());
-        });
+        }, true);
 
         DayViewEventsCanvas dayViewEventsCanvas = new DayViewEventsCanvas(mainModel);
 
@@ -44,11 +61,21 @@ public class DayView extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public JButton getLastDayButton() {
-        return lastDayButton;
+    /**
+     * Binds a listener to the next day button.
+     *
+     * @param listener the listener to bind
+     */
+    public void onNextDayButtonClicked(ActionListener listener) {
+        nextDayButton.addActionListener(listener);
     }
 
-    public JButton getNextDayButton() {
-        return nextDayButton;
+    /**
+     * Binds a listener to the previous day button.
+     *
+     * @param listener the listener to bind
+     */
+    public void  onPrevDayButtonClicked(ActionListener listener) {
+        lastDayButton.addActionListener(listener);
     }
 }

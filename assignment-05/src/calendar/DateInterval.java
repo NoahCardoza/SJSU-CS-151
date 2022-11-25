@@ -5,7 +5,7 @@
  * @assignment My First Calendar
  */
 
-package calender;
+package calendar;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -35,7 +35,7 @@ public class DateInterval extends Interval<LocalDate> {
      *
      * @param scanner the scanner instance to deserialize the dates from.
      *
-     * @return a new calender.DateInterval instance
+     * @return a new DateInterval instance
      */
     public static DateInterval fromScanner(Scanner scanner) {
         LocalDate start = LocalDate.parse(scanner.next(), formatter);

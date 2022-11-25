@@ -1,30 +1,47 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/08/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.model;
 
-import calender.Event;
-import calender.MyCalender;
+import calendar.Event;
+import calendar.MyCalendar;
+import gui.EventManager;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * The main model for the whole GUI. Manages the current month, day and
+ * state of the day and month view.
+ */
 public class MainModel extends BaseModel {
     private static final DateTimeFormatter monthFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
     private static final DateTimeFormatter dayFormat = DateTimeFormatter.ofPattern("EE MM/dd/yyyy");
-    private final MyCalender calender;
+    private final MyCalendar calendar;
     private String monthViewTitle;
     private String dayViewTitle;
     private YearMonth currentMonth;
     private LocalDate currentDay;
     private final ArrayList<DayButtonModel> dayButtonModels;
 
-    public MainModel(MyCalender calender, String monthViewTitle, String dayViewTitle, YearMonth currentMonth, LocalDate currentDay) {
+    /**
+     * Constructs a new instance.
+     *
+     * @param calendar the calendar instance to use
+     * @param currentMonth the current month to display in the gui
+     * @param currentDay the current day to select in the day viewer
+     */
+    public MainModel(MyCalendar calendar, YearMonth currentMonth, LocalDate currentDay) {
         super();
-        this.calender = calender;
-        this.monthViewTitle = monthViewTitle;
-        this.dayViewTitle = dayViewTitle;
-        this.currentMonth = currentMonth;
-        this.currentDay = currentDay;
+
+        this.calendar = calendar;
+
         this.dayButtonModels = new ArrayList<>();
 
         for (int week = 0; week < 6; week++) {
@@ -33,6 +50,11 @@ public class MainModel extends BaseModel {
             }
         }
 
+        // explicitly disable warnings inside the constructor
+        EventManager.setRaiseErrorOnNoListener(false);
+        setCurrentDay(currentDay);
+        setCurrentMonth(currentMonth);
+        EventManager.setRaiseErrorOnNoListener(true);
     }
 
     public String getMonthViewTitle() {
@@ -47,6 +69,11 @@ public class MainModel extends BaseModel {
         return currentMonth;
     }
 
+    /**
+     * Set the current month and update related values.
+     *
+     * @param currentMonth the new current month
+     */
     public void setCurrentMonth(YearMonth currentMonth) {
         this.currentMonth = currentMonth;
         monthViewTitle = currentMonth.format(monthFormat);
@@ -67,7 +94,7 @@ public class MainModel extends BaseModel {
             btn.setText(Integer.toString(i + 1));
             btn.setSelected(false);
             btn.setToday(false);
-            btn.setHasEvents(calender.getAllEventsOnDate(currentCalendarDay).size() > 0);
+            btn.setHasEvents(calendar.getAllEventsOnDate(currentCalendarDay).size() > 0);
             currentCalendarDay = currentCalendarDay.plusDays(1);
         }
 
@@ -90,6 +117,11 @@ public class MainModel extends BaseModel {
         return currentDay;
     }
 
+    /**
+     * Set a new current day to display and update related values.
+     *
+     * @param currentDay the new current day value
+     */
     public void setCurrentDay(LocalDate currentDay) {
         this.currentDay = currentDay;
         dayViewTitle = currentDay.format(dayFormat);
@@ -110,15 +142,19 @@ public class MainModel extends BaseModel {
     }
 
     public ArrayList<Event> getAllEventsOnCurrentDay() {
-        return calender.getAllEventsOnDate(currentDay);
+        return calendar.getAllEventsOnDate(currentDay);
     }
 
     public void addCalendarEvent(Event event) {
-        calender.addEvent(event);
+        calendar.addEvent(event);
         setCurrentDay(event.getStartDate());
     }
 
     public DayButtonModel getDayButtonModel(int index) {
         return dayButtonModels.get(index);
+    }
+
+    public boolean checkConflict(Event event) {
+        return calendar.checkConflict(event);
     }
 }

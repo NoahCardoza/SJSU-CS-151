@@ -5,7 +5,7 @@
  * @assignment My First Calendar
  */
 
-package calender;
+package calendar;
 
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -32,7 +32,7 @@ public class TimeInterval extends Interval<LocalTime> {
      *
      * @param scanner the scanner instance to deserialize the timestamps from.
      *
-     * @return a new calender.TimeInterval instance
+     * @return a new TimeInterval instance
      */
     public static TimeInterval fromScanner(Scanner scanner) {
         LocalTime startTime = LocalTime.parse(scanner.next());

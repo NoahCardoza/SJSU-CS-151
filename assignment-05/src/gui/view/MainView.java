@@ -1,3 +1,10 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/08/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.view;
 
 import gui.model.MainModel;
@@ -70,18 +77,38 @@ public class MainView extends JFrame {
         return monthView;
     }
 
-    public JButton getCreateEventButton() {
-        return createEventButton;
+    /**
+     * Binds a listener to the create event button.
+     *
+     * @param listener the listener to bind
+     */
+    public void onCreateEventClick(ActionListener listener) {
+        createEventButton.addActionListener(listener);
     }
 
-    public JButton getLastMonthButton() {
-        return lastMonthButton;
+    /**
+     * Binds a listener to the previous month button.
+     *
+     * @param listener the listener to bind
+     */
+    public void onPrevMonthClick(ActionListener listener) {
+        lastMonthButton.addActionListener(listener);
     }
 
-    public JButton getNextMonthButton() {
-        return nextMonthButton;
+    /**
+     * Binds a listener to the next month button.
+     *
+     * @param listener the listener to bind
+     */
+    public void onNextMonthClick(ActionListener listener) {
+        nextMonthButton.addActionListener(listener);
     }
 
+    /**
+     * Binds a listener to the "navigate to today" button.
+     *
+     * @param listener the listener to bind
+     */
     public void addTodayButtonActionListener(ActionListener listener) {
         todayButton.addActionListener(listener);
     }

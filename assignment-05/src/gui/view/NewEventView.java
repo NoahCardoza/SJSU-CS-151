@@ -1,3 +1,10 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/10/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.view;
 
 import gui.model.NewEventModel;
@@ -9,6 +16,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A view used when the user wants to add a new event
+ * to the calendar.
+ */
 public class NewEventView extends JFrame {
     private final JTextField nameTextField;
     private final JTextField startDateTextField;
@@ -19,6 +30,11 @@ public class NewEventView extends JFrame {
     private final JComboBox<String> eventTypeSelect;
     private final JCheckBox[] daysOfTheWeekCheckboxes;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param newEventModel a reference to the new event model
+     */
     public NewEventView(NewEventModel newEventModel) {
         super();
 
@@ -81,14 +97,31 @@ public class NewEventView extends JFrame {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    /**
+     * Binds a listener to the combobox.
+     *
+     * @param listener the listener to bind
+     */
     public void addEventTypeComboBoxActionListener(ActionListener listener) {
         eventTypeSelect.addActionListener(listener);
     }
 
+    /**
+     * Binds a listener to the save button.
+     *
+     * @param listener the listener to bind
+     */
     public void addSaveButtonActionListener(ActionListener listener) {
         saveButton.addActionListener(listener);
     }
 
+    /**
+     * Returns a list of numbers being the indexes of the days
+     * the user selected with the checkboxes.
+     *
+     * @return an array of integers being the indexes of the
+     *         selected days
+     */
     public List<Integer> getSelectedDays() {
         ArrayList<Integer> selected = new ArrayList<>();
 

@@ -1,5 +1,15 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/08/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.model;
 
+/**
+ * A model to manage the state of each day button in the day button view.
+ */
 public class DayButtonModel extends BaseModel {
     private boolean isVisible;
     private String text;
@@ -7,6 +17,14 @@ public class DayButtonModel extends BaseModel {
     private boolean isToday;
     private boolean isSelected;
 
+    /**
+     * Constructs a new instance.
+     *
+     * @param text the text content
+     * @param hasEvents if the day has events
+     * @param isToday if the day is today
+     * @param isSelected if the day is the day currently selected
+     */
     public DayButtonModel(String text, boolean hasEvents, boolean isToday, boolean isSelected) {
         this.text = text;
         this.hasEvents = hasEvents;

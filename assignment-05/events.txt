@@ -14,6 +14,8 @@ O:Novo Amor Concert (The Fillmore)
 09/17/2022 20:00 22:00
 O:Review open-source PRs
 06/12/2024 09:00 10:00
+O:Test
+11/25/2022 11:00 12:00
 R:CS 146: Lecture
 MW 08/22/2022 12/07/2022 13:30 14:45
 R:IES 130: Lecture

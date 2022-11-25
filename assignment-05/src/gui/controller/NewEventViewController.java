@@ -1,9 +1,15 @@
+/**
+ * @author Noah Cardoza
+ * @version 0.0.1
+ * @date 11/10/2022
+ * @assignment Calendar GUI
+ */
+
 package gui.controller;
 
-import calender.DateInterval;
-import calender.Event;
-import calender.MyCalender;
-import calender.TimeInterval;
+import calendar.DateInterval;
+import calendar.Event;
+import calendar.TimeInterval;
 import gui.model.MainModel;
 import gui.model.NewEventModel;
 import gui.window.NewEventWindow;
@@ -14,11 +20,23 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * A controller for the new event window created when the
+ * user wants to add a new event to the calendar.
+ */
 public class NewEventViewController {
     public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     public static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 
-    public NewEventViewController(MyCalender calender, NewEventWindow window, NewEventModel newEventModel, MainModel mainModel) {
+    /**
+     * Constructs a new instance and binds to all the submit
+     * button, check boxes, and combo box.
+     *
+     * @param window a reference to the main window
+     * @param newEventModel a reference to the new event model
+     * @param mainModel a reference to the main model
+     */
+    public NewEventViewController(NewEventWindow window, NewEventModel newEventModel, MainModel mainModel) {
         window.getNewEventView().addEventTypeComboBoxActionListener((event) -> {
             newEventModel.setEventType(NewEventModel.eventTypeOptionsToEnumValues.get(((JComboBox<?>) event.getSource()).getSelectedIndex()));
         });
@@ -54,7 +72,7 @@ public class NewEventViewController {
                     );
                 }
 
-                if (!calender.checkConflict(event)) {
+                if (!mainModel.checkConflict(event)) {
                     window.getNewEventView().dispose();
                     mainModel.addCalendarEvent(event);
                 } else {

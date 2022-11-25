@@ -5,7 +5,7 @@
  * @assignment My First Calendar
  */
 
-package calender;
+package calendar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,14 +25,14 @@ import java.util.stream.Stream;
  * Encapsulates a collection of events and handles CLI representations of
  * the calendar.
  */
-public class MyCalender {
+public class MyCalendar {
     private final ArrayList<Event> eventsOneTime;
     private final ArrayList<Event> eventsRecurring;
 
     /**
      * Constructs a calendar instance.
      */
-    public MyCalender() {
+    public MyCalendar() {
         this.eventsOneTime = new ArrayList<>();
         this.eventsRecurring = new ArrayList<>();
     }

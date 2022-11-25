@@ -5,7 +5,7 @@
  * @assignment My First Calendar
  */
 
-package calender;
+package calendar;
 
 public abstract class Interval<T extends Comparable<? super T>> {
     // TODO: should these get java docs?
