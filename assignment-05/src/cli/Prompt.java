@@ -5,6 +5,8 @@
  * @assignment My First Calendar
  */
 
+package cli;
+
 import calender.TimeInterval;
 
 import java.time.DateTimeException;
@@ -22,7 +24,7 @@ public class Prompt {
     private final Scanner scanner;
 
     /**
-     * Constructs a Prompt instance.
+     * Constructs a cli.Prompt instance.
      *
      * @param scanner the scanner to read input from
      */

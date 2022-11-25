@@ -5,6 +5,8 @@
  * @assignment My First Calendar
  */
 
+import cli.CLI;
+
 import java.util.Scanner;
 
 /**
