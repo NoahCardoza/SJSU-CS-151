@@ -2,8 +2,12 @@ O:SFO to EWR
 08/25/2022 23:00 23:00
 O:EWR to SFO
 08/28/2022 18:00 18:00
-O:Assignment 01
-09/12/2022 23:00 23:59
+O:Meeting with counselor
+09/07/2022 15:15 16:00
+O:Pickup Izzy at SFO
+09/17/2022 09:00 09:30
+O:Novo Amor Concert (The Fillmore)
+09/17/2022 20:00 22:00
 R:CS 146: Lecture
 MW 08/22/2022 12/07/2022 13:30 14:45
 R:IES 130: Lecture
